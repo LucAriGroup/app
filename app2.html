@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindful Recovery - Rehabilitation Exercises</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e6f7ff 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary) 0%, #34d399 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translate(0, 0px); }
+            50% { transform: translate(0, -10px); }
+            100% { transform: translate(0, 0px); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.5s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 0.5s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .progress-ring {
+            transition: stroke-dashoffset 0.5s ease;
+        }
+        
+        .breathing-circle {
+            animation: breathe 8s infinite ease-in-out;
+        }
+        
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .page-transition {
+            animation: pageTransition 0.5s ease-out;
+        }
+        
+        @keyframes pageTransition {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .streak-fire {
+            animation: streakFire 1.5s infinite alternate;
+        }
+        
+        @keyframes streakFire {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body class="min-h-screen text-gray-800">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md py-4 px-6 flex justify-between items-center sticky top-0 z-10">
+        <div class="flex items-center space-x-2">
+            <div class="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold">MR</div>
+            <h1 class="text-xl font-bold text-indigo-600">Mindful Recovery</h1>
+        </div>
+        <div class="flex space-x-4">
+            <button id="menuBtn" class="text-gray-600 hover:text-indigo-600">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="page-transition">
+            <div class="mb-8 text-center">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Welcome Back!</h2>
+                <p class="text-gray-600">Continue your journey to recovery and growth</p>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="card p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Current Streak</p>
+                            <h3 class="text-2xl font-bold text-indigo-600" id="streakCount">5 days</h3>
+                        </div>
+                        <div class="text-yellow-500 streak-fire">
+                            <i class="fas fa-fire text-3xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Completed Exercises</p>
+                            <h3 class="text-2xl font-bold text-green-500" id="completedCount">12</h3>
+                        </div>
+                        <div class="text-green-500">
+                            <i class="fas fa-check-circle text-3xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Mood Today</p>
+                            <h3 class="text-2xl font-bold text-blue-500" id="moodToday">Good</h3>
+                        </div>
+                        <div class="text-blue-500">
+                            <i class="fas fa-smile text-3xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Daily Exercise -->
+            <div class="card p-6 mb-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Today's Focus Exercise</h3>
+                <div class="bg-indigo-50 rounded-xl p-6 mb-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-lg font-semibold text-indigo-700">Mindful Breathing</h4>
+                        <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm">5 mins</span>
+                    </div>
+                    <p class="text-gray-600 mb-4">Focus on your breath to calm your mind and reduce stress.</p>
+                    <button class="btn-primary w-full start-exercise" data-exercise="breathing">Start Exercise</button>
+                </div>
+            </div>
+            
+            <!-- Exercise Categories -->
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Exercise Categories</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="card p-6 flex items-center space-x-4 cursor-pointer category-card" data-category="mindfulness">
+                    <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                        <i class="fas fa-brain text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Mindfulness</h4>
+                        <p class="text-gray-600 text-sm">Stay present and focused</p>
+                    </div>
+                </div>
+                
+                <div class="card p-6 flex items-center space-x-4 cursor-pointer category-card" data-category="emotional">
+                    <div class="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center text-pink-600">
+                        <i class="fas fa-heart text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Emotional Regulation</h4>
+                        <p class="text-gray-600 text-sm">Manage your emotions</p>
+                    </div>
+                </div>
+                
+                <div class="card p-6 flex items-center space-x-4 cursor-pointer category-card" data-category="coping">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                        <i class="fas fa-shield-alt text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Coping Skills</h4>
+                        <p class="text-gray-600 text-sm">Build resilience</p>
+                    </div>
+                </div>
+                
+                <div class="card p-6 flex items-center space-x-4 cursor-pointer category-card" data-category="communication">
+                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                        <i class="fas fa-comments text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Communication</h4>
+                        <p class="text-gray-600 text-sm">Improve relationships</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Tracking -->
+            <div class="card p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Your Progress</h3>
+                <div class="flex items-center justify-center mb-4">
+                    <div class="relative w-40 h-40">
+                        <svg class="w-full h-full" viewBox="0 0 100 100">
+                            <circle class="text-gray-200 stroke-current" stroke-width="10" cx="50" cy="50" r="40" fill="transparent"></circle>
+                            <circle class="text-indigo-500 progress-ring stroke-current" stroke-width="10" stroke-linecap="round" cx="50" cy="50" r="40" fill="transparent" stroke-dasharray="251.2" stroke-dashoffset="75.36" transform="rotate(-90 50 50)"></circle>
+                            <text x="50" y="50" font-family="Arial" font-size="14" text-anchor="middle" alignment-baseline="middle" fill="#4f46e5" class="font-bold">70%</text>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-center text-gray-600">You've completed 70% of your weekly goals. Keep going!</p>
+            </div>
+        </section>
+        
+        <!-- Exercises Section -->
+        <section id="exercises" class="hidden page-transition">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Exercises</h2>
+                <button class="text-indigo-600 font-semibold back-to-dashboard">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+                </button>
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex space-x-4 overflow-x-auto pb-2">
+                    <button class="category-filter bg-indigo-500 text-white px-4 py-2 rounded-full whitespace-nowrap" data-category="all">All</button>
+                    <button class="category-filter bg-white text-gray-700 px-4 py-2 rounded-full whitespace-nowrap" data-category="mindfulness">Mindfulness</button>
+                    <button class="category-filter bg-white text-gray-700 px-4 py-2 rounded-full whitespace-nowrap" data-category="emotional">Emotional</button>
+                    <button class="category-filter bg-white text-gray-700 px-4 py-2 rounded-full whitespace-nowrap" data-category="coping">Coping</button>
+                    <button class="category-filter bg-white text-gray-700 px-4 py-2 rounded-full whitespace-nowrap" data-category="communication">Communication</button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 gap-6" id="exercises-list">
+                <!-- Exercises will be dynamically loaded here -->
+            </div>
+        </section>
+        
+        <!-- Exercise Detail Section -->
+        <section id="exercise-detail" class="hidden page-transition">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800" id="exercise-title">Exercise Title</h2>
+                <button class="text-indigo-600 font-semibold back-to-exercises">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Exercises
+                </button>
+            </div>
+            
+            <div class="card p-6 mb-6">
+                <div id="exercise-content">
+                    <!-- Exercise content will be dynamically loaded here -->
+                </div>
+                
+                <div class="mt-8">
+                    <button class="btn-primary w-full mb-4" id="start-exercise-btn">Start Exercise</button>
+                    <button class="btn-secondary w-full hidden" id="complete-exercise-btn">Mark as Complete</button>
+                </div>
+            </div>
+            
+            <div class="card p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Progress Tracking</h3>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-700">Completion</span>
+                            <span class="text-gray-700" id="completion-percent">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-indigo-600 h-2.5 rounded-full" id="completion-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-700">Days in a row</span>
+                            <span class="text-gray-700" id="streak-days">0</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-green-500 h-2.5 rounded-full" id="streak-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Active Exercise Section -->
+        <section id="active-exercise" class="hidden page-transition">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800" id="active-exercise-title">Active Exercise</h2>
+                <button class="text-indigo-600 font-semibold back-to-exercise-detail">
+                    <i class="fas fa-arrow-left mr-2"></i> Back
+                </button>
+            </div>
+            
+            <div class="card p-6 text-center">
+                <div id="active-exercise-content">
+                    <!-- Active exercise content will be dynamically loaded here -->
+                </div>
+                
+                <div class="mt-8">
+                    <button class="btn-secondary w-full mb-4 hidden" id="finish-exercise-btn">Finish Exercise</button>
+                    <button class="btn-primary w-full hidden" id="next-step-btn">Next Step</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Profile Section -->
+        <section id="profile" class="hidden page-transition">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Your Profile</h2>
+                <button class="text-indigo-600 font-semibold back-to-dashboard">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+                </button>
+            </div>
+            
+            <div class="card p-6 mb-6">
+                <div class="flex items-center space-x-4 mb-6">
+                    <div class="w-20 h-20 rounded-full bg-indigo-500 flex items-center justify-center text-white text-2xl font-bold">
+                        JD
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800">John Doe</h3>
+                        <p class="text-gray-600">Member since June 2023</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 mb-2">Daily Reminder</label>
+                        <div class="flex items-center">
+                            <input type="time" class="border border-gray-300 rounded-lg px-4 py-2 w-full" value="09:00">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">Weekly Goal</label>
+                        <select class="border border-gray-300 rounded-lg px-4 py-2 w-full">
+                            <option>3 exercises per week</option>
+                            <option>5 exercises per week</option>
+                            <option>7 exercises per week</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">Mood Tracking</label>
+                        <div class="flex space-x-2">
+                            <button class="flex-1 py-2 rounded-lg border border-gray-300 text-gray-700">😔</button>
+                            <button class="flex-1 py-2 rounded-lg border border-gray-300 text-gray-700">😐</button>
+                            <button class="flex-1 py-2 rounded-lg border border-gray-300 text-gray-700 bg-indigo-50 text-indigo-600 border-indigo-500">😊</button>
+                            <button class="flex-1 py-2 rounded-lg border border-gray-300 text-gray-700">😄</button>
+                            <button class="flex-1 py-2 rounded-lg border border-gray-300 text-gray-700">🤩</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Your Achievements</h3>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-yellow-100 rounded-lg p-4 text-center">
+                        <i class="fas fa-fire text-yellow-500 text-2xl mb-2"></i>
+                        <p class="text-sm font-semibold">5 Day Streak</p>
+                    </div>
+                    <div class="bg-green-100 rounded-lg p-4 text-center">
+                        <i class="fas fa-check-circle text-green-500 text-2xl mb-2"></i>
+                        <p class="text-sm font-semibold">10 Exercises</p>
+                    </div>
+                    <div class="bg-blue-100 rounded-lg p-4 text-center">
+                        <i class="fas fa-star text-blue-500 text-2xl mb-2"></i>
+                        <p class="text-sm font-semibold">Mindfulness Master</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Bottom Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-2 px-6 flex justify-around">
+        <button class="nav-btn flex flex-col items-center text-indigo-600" data-page="dashboard">
+            <i class="fas fa-home text-lg"></i>
+            <span class="text-xs mt-1">Home</span>
+        </button>
+        <button class="nav-btn flex flex-col items-center text-gray-500" data-page="exercises">
+            <i class="fas fa-dumbbell text-lg"></i>
+            <span class="text-xs mt-1">Exercises</span>
+        </button>
+        <button class="nav-btn flex flex-col items-center text-gray-500" data-page="profile">
+            <i class="fas fa-user text-lg"></i>
+            <span class="text-xs mt-1">Profile</span>
+        </button>
+    </div>
+
+    <script>
+        // Sample data for exercises
+        const exercisesData = {
+            mindfulness: [
+                {
+                    id: 1,
+                    title: "Mindful Breathing",
+                    duration: "5 minutes",
+                    description: "Focus on your breath to calm your mind and reduce stress.",
+                    steps: [
+                        "Find a comfortable sitting position",
+                        "Close your eyes and take a deep breath",
+                        "Focus on the sensation of breathing",
+                        "If your mind wanders, gently return focus to your breath",
+                        "Continue for 5 minutes"
+                    ],
+                    completed: false
+                },
+                {
+                    id: 2,
+                    title: "Body Scan Meditation",
+                    duration: "10 minutes",
+                    description: "Bring awareness to different parts of your body to release tension.",
+                    steps: [
+                        "Lie down or sit comfortably",
+                        "Close your eyes and take a few deep breaths",
+                        "Bring attention to your toes, notice any sensations",
+                        "Slowly move your attention up through your body",
+                        "Notice any areas of tension without judgment",
+                        "Continue scanning your entire body"
+                    ],
+                    completed: true
+                }
+            ],
+            emotional: [
+                {
+                    id: 3,
+                    title: "Emotion Identification",
+                    duration: "5 minutes",
+                    description: "Learn to identify and name your emotions accurately.",
+                    steps: [
+                        "Take a moment to check in with yourself",
+                        "Identify what you're feeling right now",
+                        "Try to name the emotion specifically",
+                        "Consider what might have triggered this emotion",
+                        "Accept the emotion without judgment"
+                    ],
+                    completed: false
+                },
+                {
+                    id: 4,
+                    title: "Emotion Regulation",
+                    duration: "8 minutes",
+                    description: "Practice techniques to manage intense emotions effectively.",
+                    steps: [
+                        "Notice when an emotion is becoming intense",
+                        "Take a step back mentally",
+                        "Use deep breathing to calm your nervous system",
+                        "Challenge any extreme thoughts",
+                        "Choose a healthy response"
+                    ],
+                    completed: false
+                }
+            ],
+            coping: [
+                {
+                    id: 5,
+                    title: "Grounding Techniques",
+                    duration: "3 minutes",
+                    description: "Use your senses to stay present during stressful moments.",
+                    steps: [
+                        "Notice 5 things you can see around you",
+                        "Notice 4 things you can touch",
+                        "Notice 3 things you can hear",
+                        "Notice 2 things you can smell",
+                        "Notice 1 thing you can taste"
+                    ],
+                    completed: true
+                },
+                {
+                    id: 6,
+                    title: "Positive Self-Talk",
+                    duration: "5 minutes",
+                    description: "Replace negative thoughts with compassionate ones.",
+                    steps: [
+                        "Notice when you're being self-critical",
+                        "Challenge the negative thought",
+                        "Replace it with a more balanced perspective",
+                        "Speak to yourself as you would a friend",
+                        "Practice this regularly"
+                    ],
+                    completed: false
+                }
+            ],
+            communication: [
+                {
+                    id: 7,
+                    title: "Active Listening",
+                    duration: "7 minutes",
+                    description: "Improve your communication by truly hearing others.",
+                    steps: [
+                        "Focus completely on the speaker",
+                        "Avoid interrupting or planning your response",
+                        "Show you're listening with nonverbal cues",
+                        "Paraphrase what you heard to confirm understanding",
+                        "Ask clarifying questions if needed"
+                    ],
+                    completed: false
+                },
+                {
+                    id: 8,
+                    title: "I-Statements Practice",
+                    duration: "6 minutes",
+                    description: "Express your feelings without blaming others.",
+                    steps: [
+                        "Identify the specific behavior that affected you",
+                        "Name the feeling it created",
+                        "Explain the impact it had on you",
+                        "Make a request for change",
+                        "Practice with different scenarios"
+                    ],
+                    completed: true
+                }
+            ]
+        };
+
+        // App state
+        let appState = {
+            currentPage: 'dashboard',
+            currentExercise: null,
+            currentStep: 0,
+            userData: {
+                streak: 5,
+                completedExercises: 12,
+                mood: 'Good',
+                progress: 70
+            }
+        };
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user data from localStorage if available
+            const savedData = localStorage.getItem('mindfulRecoveryData');
+            if (savedData) {
+                appState.userData = JSON.parse(savedData);
+                updateDashboard();
+            }
+
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Initialize exercises list
+            displayExercises('all');
+        });
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Navigation
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const page = this.getAttribute('data-page');
+                    navigateToPage(page);
+                    
+                    // Update active nav button
+                    document.querySelectorAll('.nav-btn').forEach(b => {
+                        b.classList.remove('text-indigo-600');
+                        b.classList.add('text-gray-500');
+                    });
+                    this.classList.remove('text-gray-500');
+                    this.classList.add('text-indigo-600');
+                });
+            });
+            
+            // Back buttons
+            document.querySelectorAll('.back-to-dashboard').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    navigateToPage('dashboard');
+                });
+            });
+            
+            document.querySelectorAll('.back-to-exercises').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    navigateToPage('exercises');
+                });
+            });
+            
+            document.querySelector('.back-to-exercise-detail').addEventListener('click', function() {
+                navigateToPage('exercise-detail');
+            });
+            
+            // Category cards on dashboard
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    navigateToPage('exercises');
+                    // Set the active filter to this category
+                    setTimeout(() => {
+                        document.querySelector(`.category-filter[data-category="${category}"]`).click();
+                    }, 100);
+                });
+            });
+            
+            // Category filters
+            document.querySelectorAll('.category-filter').forEach(filter => {
+                filter.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    
+                    // Update active filter
+                    document.querySelectorAll('.category-filter').forEach(f => {
+                        f.classList.remove('bg-indigo-500', 'text-white');
+                        f.classList.add('bg-white', 'text-gray-700');
+                    });
+                    this.classList.remove('bg-white', 'text-gray-700');
+                    this.classList.add('bg-indigo-500', 'text-white');
+                    
+                    displayExercises(category);
+                });
+            });
+            
+            // Start exercise buttons
+            document.querySelectorAll('.start-exercise').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const exerciseType = this.getAttribute('data-exercise');
+                    // For demo, we'll use the first exercise of mindfulness category
+                    const exercise = exercisesData.mindfulness[0];
+                    startExercise(exercise);
+                });
+            });
+            
+            // Complete exercise button
+            document.getElementById('complete-exercise-btn').addEventListener('click', function() {
+                completeExercise(appState.currentExercise);
+            });
+            
+            // Next step button in active exercise
+            document.getElementById('next-step-btn').addEventListener('click', function() {
+                nextStep();
+            });
+            
+            // Finish exercise button
+            document.getElementById('finish-exercise-btn').addEventListener('click', function() {
+                finishExercise();
+            });
+        }
+
+        // Navigate to different pages
+        function navigateToPage(page) {
+            // Hide all pages
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show the target page
+            document.getElementById(page).classList.remove('hidden');
+            
+            // Add page transition animation
+            document.getElementById(page).classList.add('page-transition');
+            
+            // Update app state
+            appState.currentPage = page;
+            
+            // Special handling for certain pages
+            if (page === 'dashboard') {
+                updateDashboard();
+            }
+        }
+
+        // Update dashboard with current data
+        function updateDashboard() {
+            document.getElementById('streakCount').textContent = `${appState.userData.streak} days`;
+            document.getElementById('completedCount').textContent = appState.userData.completedExercises;
+            document.getElementById('moodToday').textContent = appState.userData.mood;
+            
+            // Update progress ring
+            const progressRing = document.querySelector('.progress-ring');
+            const circumference = 2 * Math.PI * 40;
+            const offset = circumference - (appState.userData.progress / 100) * circumference;
+            progressRing.style.strokeDasharray = `${circumference} ${circumference}`;
+            progressRing.style.strokeDashoffset = offset;
+            
+            // Update progress text
+            document.querySelector('.progress-ring + text').textContent = `${appState.userData.progress}%`;
+        }
+
+        // Display exercises based on category
+        function displayExercises(category) {
+            const exercisesList = document.getElementById('exercises-list');
+            exercisesList.innerHTML = '';
+            
+            let exercisesToShow = [];
+            
+            if (category === 'all') {
+                // Combine all exercises
+                for (const cat in exercisesData) {
+                    exercisesToShow = exercisesToShow.concat(exercisesData[cat]);
+                }
+            } else {
+                exercisesToShow = exercisesData[category] || [];
+            }
+            
+            exercisesToShow.forEach(exercise => {
+                const exerciseElement = document.createElement('div');
+                exerciseElement.className = 'card p-6 cursor-pointer exercise-item';
+                exerciseElement.setAttribute('data-id', exercise.id);
+                
+                exerciseElement.innerHTML = `
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-lg font-semibold text-gray-800">${exercise.title}</h4>
+                        <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm">${exercise.duration}</span>
+                    </div>
+                    <p class="text-gray-600 mb-4">${exercise.description}</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm ${exercise.completed ? 'text-green-500' : 'text-gray-500'}">
+                            <i class="fas ${exercise.completed ? 'fa-check-circle' : 'fa-circle'} mr-1"></i>
+                            ${exercise.completed ? 'Completed' : 'Not started'}
+                        </span>
+                        <button class="text-indigo-600 font-semibold start-exercise-from-list" data-id="${exercise.id}">
+                            Start <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                `;
+                
+                exercisesList.appendChild(exerciseElement);
+            });
+            
+            // Add event listeners to exercise items
+            document.querySelectorAll('.exercise-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const exerciseId = parseInt(this.getAttribute('data-id'));
+                    const exercise = findExerciseById(exerciseId);
+                    showExerciseDetail(exercise);
+                });
+            });
+            
+            // Add event listeners to start buttons
+            document.querySelectorAll('.start-exercise-from-list').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const exerciseId = parseInt(this.getAttribute('data-id'));
+                    const exercise = findExerciseById(exerciseId);
+                    startExercise(exercise);
+                });
+            });
+        }
+
+        // Find exercise by ID
+        function findExerciseById(id) {
+            for (const category in exercisesData) {
+                const exercise = exercisesData[category].find(ex => ex.id === id);
+                if (exercise) return exercise;
+            }
+            return null;
+        }
+
+        // Show exercise detail
+        function showExerciseDetail(exercise) {
+            if (!exercise) return;
+            
+            appState.currentExercise = exercise;
+            
+            document.getElementById('exercise-title').textContent = exercise.title;
+            
+            const exerciseContent = document.getElementById('exercise-content');
+            exerciseContent.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm">${exercise.duration}</span>
+                    <span class="text-sm ${exercise.completed ? 'text-green-500' : 'text-gray-500'}">
+                        <i class="fas ${exercise.completed ? 'fa-check-circle' : 'fa-circle'} mr-1"></i>
+                        ${exercise.completed ? 'Completed' : 'Not started'}
+                    </span>
+                </div>
+                <p class="text-gray-600 mb-6">${exercise.description}</p>
+                <h4 class="font-semibold text-gray-800 mb-3">Steps:</h4>
+                <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                    ${exercise.steps.map(step => `<li>${step}</li>`).join('')}
+                </ol>
+            `;
+            
+            // Show/hide complete button based on completion status
+            const completeBtn = document.getElementById('complete-exercise-btn');
+            if (exercise.completed) {
+                completeBtn.classList.add('hidden');
+            } else {
+                completeBtn.classList.remove('hidden');
+            }
+            
+            // Update progress tracking
+            updateExerciseProgress();
+            
+            navigateToPage('exercise-detail');
+        }
+
+        // Update exercise progress display
+        function updateExerciseProgress() {
+            const totalExercises = Object.values(exercisesData).flat().length;
+            const completedExercises = Object.values(exercisesData).flat().filter(ex => ex.completed).length;
+            const completionPercent = Math.round((completedExercises / totalExercises) * 100);
+            
+            document.getElementById('completion-percent').textContent = `${completionPercent}%`;
+            document.getElementById('completion-bar').style.width = `${completionPercent}%`;
+            
+            document.getElementById('streak-days').textContent = `${appState.userData.streak} days`;
+            const streakPercent = Math.min(100, (appState.userData.streak / 7) * 100);
+            document.getElementById('streak-bar').style.width = `${streakPercent}%`;
+        }
+
+        // Start an exercise
+        function startExercise(exercise) {
+            if (!exercise) return;
+            
+            appState.currentExercise = exercise;
+            appState.currentStep = 0;
+            
+            document.getElementById('active-exercise-title').textContent = exercise.title;
+            
+            showExerciseStep();
+            
+            navigateToPage('active-exercise');
+        }
+
+        // Show current step of active exercise
+        function showExerciseStep() {
+            if (!appState.currentExercise) return;
+            
+            const activeContent = document.getElementById('active-exercise-content');
+            const nextBtn = document.getElementById('next-step-btn');
+            const finishBtn = document.getElementById('finish-exercise-btn');
+            
+            if (appState.currentStep < appState.currentExercise.steps.length) {
+                // Show current step
+                activeContent.innerHTML = `
+                    <div class="mb-6">
+                        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-indigo-100 flex items-center justify-center breathing-circle">
+                            <span class="text-3xl font-bold text-indigo-600">${appState.currentStep + 1}</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Step ${appState.currentStep + 1}</h3>
+                        <p class="text-gray-700 text-lg">${appState.currentExercise.steps[appState.currentStep]}</p>
+                    </div>
+                    <div class="text-gray-500 text-sm">
+                        ${appState.currentStep + 1} of ${appState.currentExercise.steps.length} steps
+                    </div>
+                `;
+                
+                // Show next button, hide finish button
+                nextBtn.classList.remove('hidden');
+                finishBtn.classList.add('hidden');
+            } else {
+                // Exercise completed
+                activeContent.innerHTML = `
+                    <div class="mb-6 text-center">
+                        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-green-100 flex items-center justify-center">
+                            <i class="fas fa-check text-4xl text-green-500"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Exercise Complete!</h3>
+                        <p class="text-gray-700">Great job completing "${appState.currentExercise.title}"</p>
+                    </div>
+                `;
+                
+                // Show finish button, hide next button
+                nextBtn.classList.add('hidden');
+                finishBtn.classList.remove('hidden');
+            }
+        }
+
+        // Move to next step in active exercise
+        function nextStep() {
+            appState.currentStep++;
+            showExerciseStep();
+        }
+
+        // Finish active exercise
+        function finishExercise() {
+            if (appState.currentExercise && !appState.currentExercise.completed) {
+                completeExercise(appState.currentExercise);
+            }
+            navigateToPage('exercise-detail');
+        }
+
+        // Complete an exercise
+        function completeExercise(exercise) {
+            if (!exercise) return;
+            
+            // Mark exercise as completed
+            exercise.completed = true;
+            
+            // Update user data
+            appState.userData.completedExercises++;
+            appState.userData.streak++;
+            appState.userData.progress = Math.min(100, appState.userData.progress + 5);
+            
+            // Save to localStorage
+            localStorage.setItem('mindfulRecoveryData', JSON.stringify(appState.userData));
+            
+            // Update UI
+            updateDashboard();
+            updateExerciseProgress();
+            
+            // Show completion message
+            alert('Exercise marked as complete! Great job!');
+            
+            // Update exercise detail view
+            showExerciseDetail(exercise);
+        }
+    </script>
+</body>
+</html>

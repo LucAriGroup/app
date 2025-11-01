@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathfinder Progress Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        :root {
+            --primary: #3b82f6;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        .pulse-slow {
+            animation: pulse 2s infinite;
+        }
+        
+        .bounce-in {
+            animation: bounceIn 0.6s;
+        }
+        
+        .progress-bar {
+            transition: width 1s ease-in-out;
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .progress-ring {
+            transition: stroke-dashoffset 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white">
+                    <i class="fas fa-mountain"></i>
+                </div>
+                <h1 class="text-xl font-bold text-gray-800">Pathfinder Progress</h1>
+            </div>
+            <button id="themeToggle" class="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Welcome Section -->
+        <section id="welcome" class="text-center mb-12 fade-in">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Welcome to Pathfinder Bootcamp</h2>
+                <p class="text-gray-600 mb-8">Track your journey, celebrate your progress, and unlock your potential</p>
+                <div class="floating inline-block">
+                    <div class="w-24 h-24 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-3xl shadow-lg">
+                        <i class="fas fa-hiking"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard -->
+        <section id="dashboard" class="mb-12 slide-up">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Overall Progress Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Overall Progress</h3>
+                    <div class="flex justify-center mb-4">
+                        <div class="relative w-32 h-32">
+                            <svg class="w-full h-full" viewBox="0 0 36 36">
+                                <path class="text-gray-200 stroke-current" stroke-width="3" fill="none" d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path id="overallProgressRing" class="progress-ring text-blue-500 stroke-current" stroke-width="3" stroke-dasharray="100, 100" fill="none" d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <text x="18" y="20.5" class="text-lg font-bold text-center" text-anchor="middle" fill="#4B5563">0%</text>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-center text-gray-600">Keep going! You're making great progress.</p>
+                </div>
+
+                <!-- Weekly Goals Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Weekly Goals</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-700">Physical Activity</span>
+                                <span class="text-sm font-medium text-gray-700" id="physicalPercent">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div id="physicalProgress" class="bg-green-500 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-700">Mindfulness</span>
+                                <span class="text-sm font-medium text-gray-700" id="mindfulnessPercent">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div id="mindfulnessProgress" class="bg-blue-500 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-700">Social Skills</span>
+                                <span class="text-sm font-medium text-gray-700" id="socialPercent">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div id="socialProgress" class="bg-purple-500 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Streak Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Current Streak</h3>
+                    <div class="flex flex-col items-center justify-center">
+                        <div class="text-5xl font-bold text-yellow-500 mb-2 pulse-slow" id="streakCount">0</div>
+                        <p class="text-gray-600">Days in a row</p>
+                        <div class="mt-4 flex space-x-1">
+                            <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Tracking -->
+        <section id="progressTracking" class="mb-12 slide-up">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Track Your Progress</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-4 text-white card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold">Physical</h3>
+                            <p class="text-sm opacity-90">Activity & Health</p>
+                        </div>
+                        <div class="text-2xl">
+                            <i class="fas fa-running"></i>
+                        </div>
+                    </div>
+                    <button class="mt-4 w-full bg-white text-blue-600 py-2 rounded-lg font-medium hover:bg-blue-50 transition-colors" onclick="openCategoryModal('physical')">
+                        Log Activity
+                    </button>
+                </div>
+                
+                <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-4 text-white card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold">Emotional</h3>
+                            <p class="text-sm opacity-90">Mind & Feelings</p>
+                        </div>
+                        <div class="text-2xl">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                    </div>
+                    <button class="mt-4 w-full bg-white text-green-600 py-2 rounded-lg font-medium hover:bg-green-50 transition-colors" onclick="openCategoryModal('emotional')">
+                        Check In
+                    </button>
+                </div>
+                
+                <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-4 text-white card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold">Social</h3>
+                            <p class="text-sm opacity-90">Relationships</p>
+                        </div>
+                        <div class="text-2xl">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <button class="mt-4 w-full bg-white text-purple-600 py-2 rounded-lg font-medium hover:bg-purple-50 transition-colors" onclick="openCategoryModal('social')">
+                        Log Interaction
+                    </button>
+                </div>
+                
+                <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl p-4 text-white card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold">Skills</h3>
+                            <p class="text-sm opacity-90">Learning & Growth</p>
+                        </div>
+                        <div class="text-2xl">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                    </div>
+                    <button class="mt-4 w-full bg-white text-yellow-600 py-2 rounded-lg font-medium hover:bg-yellow-50 transition-colors" onclick="openCategoryModal('skills')">
+                        Add Skill
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Activities -->
+        <section id="recentActivities" class="mb-12 slide-up">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Recent Activities</h2>
+                <button id="clearActivities" class="text-sm text-red-500 hover:text-red-700 transition-colors">
+                    Clear All
+                </button>
+            </div>
+            
+            <div id="activitiesList" class="bg-white rounded-xl shadow-md p-4 max-h-96 overflow-y-auto">
+                <div class="text-center py-8 text-gray-500" id="noActivitiesMessage">
+                    <i class="fas fa-clipboard-list text-4xl mb-4 opacity-50"></i>
+                    <p>No activities logged yet. Start tracking your progress!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reflection Journal -->
+        <section id="reflection" class="mb-12 slide-up">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Reflection Journal</h2>
+            
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="mb-4">
+                    <label for="journalEntry" class="block text-sm font-medium text-gray-700 mb-2">How are you feeling today?</label>
+                    <textarea id="journalEntry" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Write about your thoughts, challenges, and achievements..."></textarea>
+                </div>
+                <div class="flex justify-between">
+                    <div class="flex space-x-2">
+                        <button id="saveJournal" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            Save Entry
+                        </button>
+                        <button id="viewJournal" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors">
+                            View History
+                        </button>
+                    </div>
+                    <div id="journalDate" class="text-sm text-gray-500 self-center"></div>
+                </div>
+            </div>
+            
+            <div id="journalHistory" class="mt-6 hidden">
+                <h3 class="text-lg font-semibold text-gray-700 mb-4">Previous Entries</h3>
+                <div id="journalEntries" class="space-y-4">
+                    <!-- Journal entries will be added here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Category Modal -->
+    <div id="categoryModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
+        <div class="bg-white rounded-xl shadow-2xl w-11/12 max-w-md p-6 bounce-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modalTitle" class="text-xl font-bold text-gray-800">Log Activity</h3>
+                <button id="closeModal" class="text-gray-500 hover:text-gray-700 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div id="modalContent">
+                <!-- Content will be dynamically inserted -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div id="successToast" class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-30 transform translate-y-16 transition-transform duration-300">
+        <div class="flex items-center space-x-2">
+            <i class="fas fa-check-circle"></i>
+            <span>Progress saved successfully!</span>
+        </div>
+    </div>
+
+    <script>
+        // App state
+        const state = {
+            activities: [],
+            journalEntries: [],
+            currentCategory: '',
+            streak: 0,
+            lastActivityDate: null
+        };
+
+        // DOM elements
+        const elements = {
+            overallProgressRing: document.getElementById('overallProgressRing'),
+            physicalProgress: document.getElementById('physicalProgress'),
+            mindfulnessProgress: document.getElementById('mindfulnessProgress'),
+            socialProgress: document.getElementById('socialProgress'),
+            physicalPercent: document.getElementById('physicalPercent'),
+            mindfulnessPercent: document.getElementById('mindfulnessPercent'),
+            socialPercent: document.getElementById('socialPercent'),
+            streakCount: document.getElementById('streakCount'),
+            activitiesList: document.getElementById('activitiesList'),
+            noActivitiesMessage: document.getElementById('noActivitiesMessage'),
+            clearActivities: document.getElementById('clearActivities'),
+            journalEntry: document.getElementById('journalEntry'),
+            saveJournal: document.getElementById('saveJournal'),
+            viewJournal: document.getElementById('viewJournal'),
+            journalDate: document.getElementById('journalDate'),
+            journalHistory: document.getElementById('journalHistory'),
+            journalEntries: document.getElementById('journalEntries'),
+            categoryModal: document.getElementById('categoryModal'),
+            modalTitle: document.getElementById('modalTitle'),
+            modalContent: document.getElementById('modalContent'),
+            closeModal: document.getElementById('closeModal'),
+            successToast: document.getElementById('successToast'),
+            themeToggle: document.getElementById('themeToggle')
+        };
+
+        // Initialize the app
+        function init() {
+            loadData();
+            updateUI();
+            setupEventListeners();
+            updateDate();
+            
+            // Add some sample data if none exists
+            if (state.activities.length === 0) {
+                addSampleData();
+            }
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            const savedActivities = localStorage.getItem('pathfinderActivities');
+            const savedJournal = localStorage.getItem('pathfinderJournal');
+            const savedStreak = localStorage.getItem('pathfinderStreak');
+            const savedLastDate = localStorage.getItem('pathfinderLastDate');
+            
+            if (savedActivities) {
+                state.activities = JSON.parse(savedActivities);
+            }
+            
+            if (savedJournal) {
+                state.journalEntries = JSON.parse(savedJournal);
+            }
+            
+            if (savedStreak) {
+                state.streak = parseInt(savedStreak);
+            }
+            
+            if (savedLastDate) {
+                state.lastActivityDate = savedLastDate;
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('pathfinderActivities', JSON.stringify(state.activities));
+            localStorage.setItem('pathfinderJournal', JSON.stringify(state.journalEntries));
+            localStorage.setItem('pathfinderStreak', state.streak.toString());
+            if (state.lastActivityDate) {
+                localStorage.setItem('pathfinderLastDate', state.lastActivityDate);
+            }
+        }
+
+        // Add sample data for demonstration
+        function addSampleData() {
+            const sampleActivities = [
+                { id: 1, category: 'physical', title: 'Morning Run', description: 'Completed 3km run', date: new Date().toISOString(), value: 3 },
+                { id: 2, category: 'emotional', title: 'Meditation', description: '10 minutes of mindfulness', date: new Date(Date.now() - 86400000).toISOString(), value: 2 },
+                { id: 3, category: 'social', title: 'Group Activity', description: 'Participated in team building', date: new Date(Date.now() - 172800000).toISOString(), value: 4 }
+            ];
+            
+            state.activities.push(...sampleActivities);
+            saveData();
+        }
+
+        // Update the UI with current data
+        function updateUI() {
+            updateProgressBars();
+            updateActivitiesList();
+            updateStreak();
+        }
+
+        // Update progress bars based on activities
+        function updateProgressBars() {
+            // Calculate category progress
+            const physicalActivities = state.activities.filter(a => a.category === 'physical');
+            const emotionalActivities = state.activities.filter(a => a.category === 'emotional');
+            const socialActivities = state.activities.filter(a => a.category === 'social');
+            const skillsActivities = state.activities.filter(a => a.category === 'skills');
+            
+            // Calculate values (simplified for demo)
+            const physicalValue = Math.min(physicalActivities.reduce((sum, a) => sum + a.value, 0), 10);
+            const emotionalValue = Math.min(emotionalActivities.reduce((sum, a) => sum + a.value, 0), 10);
+            const socialValue = Math.min(socialActivities.reduce((sum, a) => sum + a.value, 0), 10);
+            const skillsValue = Math.min(skillsActivities.reduce((sum, a) => sum + a.value, 0), 10);
+            
+            // Update progress bars
+            elements.physicalProgress.style.width = `${physicalValue * 10}%`;
+            elements.mindfulnessProgress.style.width = `${emotionalValue * 10}%`;
+            elements.socialProgress.style.width = `${socialValue * 10}%`;
+            
+            elements.physicalPercent.textContent = `${physicalValue * 10}%`;
+            elements.mindfulnessPercent.textContent = `${emotionalValue * 10}%`;
+            elements.socialPercent.textContent = `${socialValue * 10}%`;
+            
+            // Update overall progress ring
+            const overallProgress = (physicalValue + emotionalValue + socialValue + skillsValue) / 4 * 10;
+            const circumference = 2 * Math.PI * 15.9155;
+            const offset = circumference - (overallProgress / 100) * circumference;
+            
+            elements.overallProgressRing.style.strokeDasharray = `${circumference} ${circumference}`;
+            elements.overallProgressRing.style.strokeDashoffset = offset;
+            
+            // Update text
+            const overallText = elements.overallProgressRing.parentElement.querySelector('text');
+            overallText.textContent = `${Math.round(overallProgress)}%`;
+        }
+
+        // Update activities list
+        function updateActivitiesList() {
+            if (state.activities.length === 0) {
+                elements.noActivitiesMessage.classList.remove('hidden');
+                return;
+            }
+            
+            elements.noActivitiesMessage.classList.add('hidden');
+            
+            // Sort activities by date (newest first)
+            const sortedActivities = [...state.activities].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Clear current list
+            elements.activitiesList.innerHTML = '';
+            
+            // Add activities to list
+            sortedActivities.forEach(activity => {
+                const activityElement = document.createElement('div');
+                activityElement.className = 'flex items-start p-3 border-b border-gray-100 last:border-0';
+                
+                const iconClass = getCategoryIcon(activity.category);
+                const colorClass = getCategoryColor(activity.category);
+                
+                activityElement.innerHTML = `
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full ${colorClass} flex items-center justify-center text-white mr-3">
+                        <i class="${iconClass}"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-medium text-gray-800">${activity.title}</h4>
+                        <p class="text-sm text-gray-600">${activity.description}</p>
+                        <p class="text-xs text-gray-500 mt-1">${formatDate(activity.date)}</p>
+                    </div>
+                    <button class="text-red-400 hover:text-red-600 transition-colors delete-activity" data-id="${activity.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                
+                elements.activitiesList.appendChild(activityElement);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-activity').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    deleteActivity(id);
+                });
+            });
+        }
+
+        // Update streak counter
+        function updateStreak() {
+            elements.streakCount.textContent = state.streak;
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Get icon for category
+        function getCategoryIcon(category) {
+            switch(category) {
+                case 'physical': return 'fas fa-running';
+                case 'emotional': return 'fas fa-brain';
+                case 'social': return 'fas fa-users';
+                case 'skills': return 'fas fa-tools';
+                default: return 'fas fa-star';
+            }
+        }
+
+        // Get color for category
+        function getCategoryColor(category) {
+            switch(category) {
+                case 'physical': return 'bg-blue-500';
+                case 'emotional': return 'bg-green-500';
+                case 'social': return 'bg-purple-500';
+                case 'skills': return 'bg-yellow-500';
+                default: return 'bg-gray-500';
+            }
+        }
+
+        // Delete an activity
+        function deleteActivity(id) {
+            state.activities = state.activities.filter(activity => activity.id !== id);
+            saveData();
+            updateUI();
+            showToast('Activity deleted');
+        }
+
+        // Add a new activity
+        function addActivity(category, title, description, value) {
+            const newActivity = {
+                id: Date.now(),
+                category,
+                title,
+                description,
+                value: parseInt(value),
+                date: new Date().toISOString()
+            };
+            
+            state.activities.push(newActivity);
+            
+            // Update streak if this is a new day
+            const today = new Date().toDateString();
+            if (state.lastActivityDate !== today) {
+                if (state.lastActivityDate && 
+                    new Date(today).getTime() - new Date(state.lastActivityDate).getTime() === 86400000) {
+                    state.streak++;
+                } else if (!state.lastActivityDate || 
+                          new Date(today).getTime() - new Date(state.lastActivityDate).getTime() > 86400000) {
+                    state.streak = 1;
+                }
+                state.lastActivityDate = today;
+            }
+            
+            saveData();
+            updateUI();
+            showToast('Activity added successfully!');
+        }
+
+        // Add a journal entry
+        function addJournalEntry(content) {
+            const newEntry = {
+                id: Date.now(),
+                content,
+                date: new Date().toISOString()
+            };
+            
+            state.journalEntries.push(newEntry);
+            saveData();
+            showToast('Journal entry saved!');
+        }
+
+        // Show journal history
+        function showJournalHistory() {
+            elements.journalHistory.classList.toggle('hidden');
+            
+            if (!elements.journalHistory.classList.contains('hidden')) {
+                elements.journalEntries.innerHTML = '';
+                
+                if (state.journalEntries.length === 0) {
+                    elements.journalEntries.innerHTML = '<p class="text-gray-500 text-center py-4">No journal entries yet.</p>';
+                    return;
+                }
+                
+                // Sort entries by date (newest first)
+                const sortedEntries = [...state.journalEntries].sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                sortedEntries.forEach(entry => {
+                    const entryElement = document.createElement('div');
+                    entryElement.className = 'bg-gray-50 rounded-lg p-4';
+                    entryElement.innerHTML = `
+                        <p class="text-gray-700 mb-2">${entry.content}</p>
+                        <p class="text-xs text-gray-500">${formatDate(entry.date)}</p>
+                    `;
+                    elements.journalEntries.appendChild(entryElement);
+                });
+            }
+        }
+
+        // Open category modal
+        function openCategoryModal(category) {
+            state.currentCategory = category;
+            
+            // Set modal title based on category
+            const categoryTitles = {
+                physical: 'Log Physical Activity',
+                emotional: 'Emotional Check-in',
+                social: 'Log Social Interaction',
+                skills: 'Add New Skill'
+            };
+            
+            elements.modalTitle.textContent = categoryTitles[category] || 'Log Activity';
+            
+            // Set modal content based on category
+            let content = '';
+            
+            switch(category) {
+                case 'physical':
+                    content = `
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Activity Type</label>
+                            <select id="activityType" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="Running">Running</option>
+                                <option value="Walking">Walking</option>
+                                <option value="Cycling">Cycling</option>
+                                <option value="Swimming">Swimming</option>
+                                <option value="Yoga">Yoga</option>
+                                <option value="Weight Training">Weight Training</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Duration (minutes)</label>
+                            <input type="number" id="activityDuration" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" min="1" max="240" value="30">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Intensity</label>
+                            <div class="flex space-x-2">
+                                <button class="intensity-btn flex-1 py-2 border border-gray-300 rounded-lg" data-value="1">Light</button>
+                                <button class="intensity-btn flex-1 py-2 border border-gray-300 rounded-lg" data-value="2">Moderate</button>
+                                <button class="intensity-btn flex-1 py-2 border border-blue-500 bg-blue-50 text-blue-600 rounded-lg" data-value="3">Intense</button>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Notes (optional)</label>
+                            <textarea id="activityNotes" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="2" placeholder="How did it feel?"></textarea>
+                        </div>
+                        <button id="saveActivity" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition-colors">
+                            Save Activity
+                        </button>
+                    `;
+                    break;
+                    
+                case 'emotional':
+                    content = `
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">How are you feeling right now?</label>
+                            <div class="grid grid-cols-3 gap-2 mb-4">
+                                <button class="mood-btn py-3 border border-gray-300 rounded-lg flex flex-col items-center" data-value="1">
+                                    <i class="fas fa-frown text-2xl text-red-400 mb-1"></i>
+                                    <span class="text-xs">Struggling</span>
+                                </button>
+                                <button class="mood-btn py-3 border border-gray-300 rounded-lg flex flex-col items-center" data-value="2">
+                                    <i class="fas fa-meh text-2xl text-yellow-400 mb-1"></i>
+                                    <span class="text-xs">Okay</span>
+                                </button>
+                                <button class="mood-btn py-3 border border-blue-500 bg-blue-50 text-blue-600 rounded-lg flex flex-col items-center" data-value="3">
+                                    <i class="fas fa-smile text-2xl text-green-400 mb-1"></i>
+                                    <span class="text-xs">Good</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">What's on your mind?</label>
+                            <textarea id="emotionalNotes" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="3" placeholder="Share your thoughts and feelings..."></textarea>
+                        </div>
+                        <button id="saveActivity" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg transition-colors">
+                            Save Check-in
+                        </button>
+                    `;
+                    break;
+                    
+                case 'social':
+                    content = `
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Interaction Type</label>
+                            <select id="interactionType" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="Group Activity">Group Activity</option>
+                                <option value="One-on-One">One-on-One Conversation</option>
+                                <option value="Team Building">Team Building</option>
+                                <option value="Support Offered">Support Offered</option>
+                                <option value="Support Received">Support Received</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Duration (minutes)</label>
+                            <input type="number" id="interactionDuration" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" min="1" max="240" value="15">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Quality of Interaction</label>
+                            <div class="flex space-x-2">
+                                <button class="quality-btn flex-1 py-2 border border-gray-300 rounded-lg" data-value="1">Challenging</button>
+                                <button class="quality-btn flex-1 py-2 border border-gray-300 rounded-lg" data-value="2">Neutral</button>
+                                <button class="quality-btn flex-1 py-2 border border-purple-500 bg-purple-50 text-purple-600 rounded-lg" data-value="3">Positive</button>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Notes (optional)</label>
+                            <textarea id="interactionNotes" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="2" placeholder="How did the interaction go?"></textarea>
+                        </div>
+                        <button id="saveActivity" class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 rounded-lg transition-colors">
+                            Save Interaction
+                        </button>
+                    `;
+                    break;
+                    
+                case 'skills':
+                    content = `
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Skill Category</label>
+                            <select id="skillCategory" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="Communication">Communication</option>
+                                <option value="Problem Solving">Problem Solving</option>
+                                <option value="Emotional Regulation">Emotional Regulation</option>
+                                <option value="Leadership">Leadership</option>
+                                <option value="Practical">Practical Skills</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Skill Name</label>
+                            <input type="text" id="skillName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Active Listening">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Time Spent (minutes)</label>
+                            <input type="number" id="skillTime" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" min="1" max="240" value="30">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Confidence Level</label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">Low</span>
+                                <input type="range" id="skillConfidence" class="flex-1" min="1" max="5" value="3">
+                                <span class="text-sm text-gray-500">High</span>
+                            </div>
+                        </div>
+                        <button id="saveActivity" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg transition-colors">
+                            Save Skill
+                        </button>
+                    `;
+                    break;
+            }
+            
+            elements.modalContent.innerHTML = content;
+            elements.categoryModal.classList.remove('hidden');
+            
+            // Add event listeners for modal buttons
+            setTimeout(() => {
+                // Intensity buttons for physical activity
+                document.querySelectorAll('.intensity-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        document.querySelectorAll('.intensity-btn').forEach(btn => {
+                            btn.classList.remove('border-blue-500', 'bg-blue-50', 'text-blue-600');
+                            btn.classList.add('border-gray-300');
+                        });
+                        this.classList.add('border-blue-500', 'bg-blue-50', 'text-blue-600');
+                        this.classList.remove('border-gray-300');
+                    });
+                });
+                
+                // Mood buttons for emotional check-in
+                document.querySelectorAll('.mood-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        document.querySelectorAll('.mood-btn').forEach(btn => {
+                            btn.classList.remove('border-blue-500', 'bg-blue-50', 'text-blue-600');
+                            btn.classList.add('border-gray-300');
+                        });
+                        this.classList.add('border-blue-500', 'bg-blue-50', 'text-blue-600');
+                        this.classList.remove('border-gray-300');
+                    });
+                });
+                
+                // Quality buttons for social interaction
+                document.querySelectorAll('.quality-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        document.querySelectorAll('.quality-btn').forEach(btn => {
+                            btn.classList.remove('border-purple-500', 'bg-purple-50', 'text-purple-600');
+                            btn.classList.add('border-gray-300');
+                        });
+                        this.classList.add('border-purple-500', 'bg-purple-50', 'text-purple-600');
+                        this.classList.remove('border-gray-300');
+                    });
+                });
+                
+                // Save activity button
+                document.getElementById('saveActivity').addEventListener('click', saveActivityFromModal);
+            }, 100);
+        }
+
+        // Save activity from modal
+        function saveActivityFromModal() {
+            const category = state.currentCategory;
+            let title, description, value;
+            
+            switch(category) {
+                case 'physical':
+                    const activityType = document.getElementById('activityType').value;
+                    const duration = document.getElementById('activityDuration').value;
+                    const intensity = document.querySelector('.intensity-btn.border-blue-500')?.getAttribute('data-value') || '2';
+                    const notes = document.getElementById('activityNotes').value;
+                    
+                    title = `${activityType} - ${duration} min`;
+                    description = `Intensity: ${intensity === '1' ? 'Light' : intensity === '2' ? 'Moderate' : 'Intense'}${notes ? ` | ${notes}` : ''}`;
+                    value = parseInt(intensity);
+                    break;
+                    
+                case 'emotional':
+                    const mood = document.querySelector('.mood-btn.border-blue-500')?.getAttribute('data-value') || '2';
+                    const emotionalNotes = document.getElementById('emotionalNotes').value;
+                    
+                    title = `Emotional Check-in`;
+                    description = `Mood: ${mood === '1' ? 'Struggling' : mood === '2' ? 'Okay' : 'Good'}${emotionalNotes ? ` | ${emotionalNotes}` : ''}`;
+                    value = parseInt(mood);
+                    break;
+                    
+                case 'social':
+                    const interactionType = document.getElementById('interactionType').value;
+                    const interactionDuration = document.getElementById('interactionDuration').value;
+                    const quality = document.querySelector('.quality-btn.border-purple-500')?.getAttribute('data-value') || '2';
+                    const interactionNotes = document.getElementById('interactionNotes').value;
+                    
+                    title = `${interactionType} - ${interactionDuration} min`;
+                    description = `Quality: ${quality === '1' ? 'Challenging' : quality === '2' ? 'Neutral' : 'Positive'}${interactionNotes ? ` | ${interactionNotes}` : ''}`;
+                    value = parseInt(quality);
+                    break;
+                    
+                case 'skills':
+                    const skillCategory = document.getElementById('skillCategory').value;
+                    const skillName = document.getElementById('skillName').value;
+                    const skillTime = document.getElementById('skillTime').value;
+                    const confidence = document.getElementById('skillConfidence').value;
+                    
+                    title = `${skillCategory}: ${skillName}`;
+                    description = `Time: ${skillTime} min | Confidence: ${confidence}/5`;
+                    value = parseInt(confidence);
+                    break;
+            }
+            
+            if (!title) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            addActivity(category, title, description, value);
+            closeModal();
+        }
+
+        // Close modal
+        function closeModal() {
+            elements.categoryModal.classList.add('hidden');
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            elements.successToast.querySelector('span').textContent = message;
+            elements.successToast.classList.remove('translate-y-16');
+            
+            setTimeout(() => {
+                elements.successToast.classList.add('translate-y-16');
+            }, 3000);
+        }
+
+        // Update date display
+        function updateDate() {
+            const now = new Date();
+            elements.journalDate.textContent = now.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Clear activities
+            elements.clearActivities.addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear all activities? This cannot be undone.')) {
+                    state.activities = [];
+                    saveData();
+                    updateUI();
+                    showToast('All activities cleared');
+                }
+            });
+            
+            // Save journal entry
+            elements.saveJournal.addEventListener('click', function() {
+                const content = elements.journalEntry.value.trim();
+                if (content) {
+                    addJournalEntry(content);
+                    elements.journalEntry.value = '';
+                } else {
+                    alert('Please write something in your journal entry');
+                }
+            });
+            
+            // View journal history
+            elements.viewJournal.addEventListener('click', showJournalHistory);
+            
+            // Close modal
+            elements.closeModal.addEventListener('click', closeModal);
+            
+            // Close modal when clicking outside
+            elements.categoryModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+            
+            // Theme toggle
+            elements.themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark');
+                const icon = this.querySelector('i');
+                if (document.body.classList.contains('dark')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                    document.body.classList.add('bg-gray-900', 'text-white');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                    document.body.classList.remove('bg-gray-900', 'text-white');
+                }
+            });
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

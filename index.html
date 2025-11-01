@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathfinder Bootcamp - Resource Directory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        :root {
+            --primary: #3b82f6;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        .pulse-slow {
+            animation: pulse 2s infinite;
+        }
+        
+        .bounce-in {
+            animation: bounceIn 0.6s;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .search-highlight {
+            background-color: #fef3c7;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        
+        .file-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .file-card:hover .file-icon {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+                <h1 class="text-xl font-bold text-gray-800">Bootcamp Resource Directory</h1>
+            </div>
+            <button id="themeToggle" class="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Welcome Section -->
+        <section id="welcome" class="text-center mb-12 fade-in">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Pathfinder Bootcamp Resources</h2>
+                <p class="text-gray-600 mb-8">Your central hub for all bootcamp materials, guides, and tools</p>
+                <div class="floating inline-block">
+                    <div class="w-24 h-24 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-3xl shadow-lg">
+                        <i class="fas fa-compass"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section id="search" class="mb-12 slide-up">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex flex-col md:flex-row md:items-center md:space-x-4">
+                    <div class="flex-1 mb-4 md:mb-0">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                            <input type="text" id="searchInput" class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Search for files, documents, or resources...">
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <select id="categoryFilter" class="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                            <option value="all">All Categories</option>
+                            <option value="progress">Progress Tracking</option>
+                            <option value="guides">Guides & Manuals</option>
+                            <option value="activities">Activities</option>
+                            <option value="forms">Forms & Templates</option>
+                            <option value="media">Media Resources</option>
+                            <option value="tools">Tools & Apps</option>
+                        </select>
+                        <button id="clearSearch" class="px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-4 flex flex-wrap gap-2" id="quickFilters">
+                    <span class="text-sm text-gray-600">Quick filters:</span>
+                    <button class="quick-filter text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 px-2 py-1 rounded transition-colors" data-category="progress">Progress Tracking</button>
+                    <button class="quick-filter text-xs bg-green-100 hover:bg-green-200 text-green-700 px-2 py-1 rounded transition-colors" data-category="guides">Guides</button>
+                    <button class="quick-filter text-xs bg-purple-100 hover:bg-purple-200 text-purple-700 px-2 py-1 rounded transition-colors" data-category="activities">Activities</button>
+                    <button class="quick-filter text-xs bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-2 py-1 rounded transition-colors" data-category="forms">Forms</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section id="stats" class="mb-12 slide-up">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white rounded-xl shadow-md p-4 text-center">
+                    <div class="text-2xl font-bold text-blue-500 mb-1" id="totalFiles">0</div>
+                    <div class="text-sm text-gray-600">Total Files</div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-4 text-center">
+                    <div class="text-2xl font-bold text-green-500 mb-1" id="recentFiles">0</div>
+                    <div class="text-sm text-gray-600">Added This Week</div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-4 text-center">
+                    <div class="text-2xl font-bold text-purple-500 mb-1" id="categoriesCount">0</div>
+                    <div class="text-sm text-gray-600">Categories</div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-4 text-center">
+                    <div class="text-2xl font-bold text-yellow-500 mb-1" id="downloadCount">0</div>
+                    <div class="text-sm text-gray-600">Total Downloads</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Files Grid -->
+        <section id="files" class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">All Resources</h2>
+                <div class="text-sm text-gray-600" id="fileCount">Showing 0 files</div>
+            </div>
+            
+            <div id="filesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Files will be dynamically inserted here -->
+            </div>
+            
+            <div id="noResults" class="text-center py-12 hidden">
+                <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
+                <h3 class="text-xl font-medium text-gray-500 mb-2">No files found</h3>
+                <p class="text-gray-500">Try adjusting your search or filter criteria</p>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section id="categories" class="mb-12 slide-up">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Browse by Category</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-4 text-white text-center card-hover cursor-pointer category-card" data-category="progress">
+                    <div class="text-2xl mb-2">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="font-semibold">Progress</h3>
+                    <p class="text-xs opacity-90 mt-1" id="progressCount">0 files</p>
+                </div>
+                
+                <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-4 text-white text-center card-hover cursor-pointer category-card" data-category="guides">
+                    <div class="text-2xl mb-2">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 class="font-semibold">Guides</h3>
+                    <p class="text-xs opacity-90 mt-1" id="guidesCount">0 files</p>
+                </div>
+                
+                <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-4 text-white text-center card-hover cursor-pointer category-card" data-category="activities">
+                    <div class="text-2xl mb-2">
+                        <i class="fas fa-hiking"></i>
+                    </div>
+                    <h3 class="font-semibold">Activities</h3>
+                    <p class="text-xs opacity-90 mt-1" id="activitiesCount">0 files</p>
+                </div>
+                
+                <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl p-4 text-white text-center card-hover cursor-pointer category-card" data-category="forms">
+                    <div class="text-2xl mb-2">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3 class="font-semibold">Forms</h3>
+                    <p class="text-xs opacity-90 mt-1" id="formsCount">0 files</p>
+                </div>
+                
+                <div class="bg-gradient-to-r from-red-500 to-red-600 rounded-xl p-4 text-white text-center card-hover cursor-pointer category-card" data-category="media">
+                    <div class="text-2xl mb-2">
+                        <i class="fas fa-photo-video"></i>
+                    </div>
+                    <h3 class="font-semibold">Media</h3>
+                    <p class="text-xs opacity-90 mt-1" id="mediaCount">0 files</p>
+                </div>
+                
+                <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-xl p-4 text-white text-center card-hover cursor-pointer category-card" data-category="tools">
+                    <div class="text-2xl mb-2">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 class="font-semibold">Tools</h3>
+                    <p class="text-xs opacity-90 mt-1" id="toolsCount">0 files</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Additions -->
+        <section id="recent" class="mb-12 slide-up">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Recently Added</h2>
+            
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File Name</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Added</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentTable" class="divide-y divide-gray-200">
+                            <!-- Recent files will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- File Preview Modal -->
+    <div id="fileModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
+        <div class="bg-white rounded-xl shadow-2xl w-11/12 max-w-md p-6 bounce-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modalFileName" class="text-xl font-bold text-gray-800 truncate">File Name</h3>
+                <button id="closeModal" class="text-gray-500 hover:text-gray-700 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="mb-4">
+                <div class="flex items-center space-x-2 mb-2">
+                    <span id="modalFileType" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">PDF</span>
+                    <span id="modalFileCategory" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Category</span>
+                </div>
+                <p id="modalFileDescription" class="text-gray-600">File description will appear here.</p>
+            </div>
+            
+            <div class="mb-4">
+                <div class="text-sm text-gray-500">
+                    <div class="flex justify-between mb-1">
+                        <span>Size:</span>
+                        <span id="modalFileSize">0 MB</span>
+                    </div>
+                    <div class="flex justify-between mb-1">
+                        <span>Added:</span>
+                        <span id="modalFileDate">Date</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Downloads:</span>
+                        <span id="modalFileDownloads">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex space-x-2">
+                <button id="downloadFile" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition-colors flex items-center justify-center space-x-2">
+                    <i class="fas fa-download"></i>
+                    <span>Download</span>
+                </button>
+                <button id="viewFile" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded-lg transition-colors flex items-center justify-center space-x-2">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>View</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white">
+                            <i class="fas fa-folder-open"></i>
+                        </div>
+                        <span class="font-bold text-gray-800">Pathfinder Bootcamp</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">Resource Directory & File Management System</p>
+                </div>
+                <div class="text-sm text-gray-600">
+                    <p>Last updated: <span id="lastUpdated">Loading...</span></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // File data structure
+        const fileData = [
+            {
+                id: 1,
+                name: "Progress Tracker App",
+                description: "Interactive web application for tracking participant progress",
+                category: "progress",
+                type: "html",
+                size: 12.5,
+                date: "2023-10-15",
+                downloads: 42,
+                icon: "fas fa-chart-line",
+                color: "blue",
+                file: "progress-tracker.html"
+            },
+            {
+                id: 2,
+                name: "Bootcamp Participant Guide",
+                description: "Complete guide for bootcamp participants with schedules and expectations",
+                category: "guides",
+                type: "pdf",
+                size: 3.2,
+                date: "2023-10-10",
+                downloads: 67,
+                icon: "fas fa-book",
+                color: "green",
+                file: "participant-guide.pdf"
+            },
+            {
+                id: 3,
+                name: "Daily Reflection Journal",
+                description: "Printable journal for daily reflections and progress notes",
+                category: "forms",
+                type: "pdf",
+                size: 1.8,
+                date: "2023-10-12",
+                downloads: 38,
+                icon: "fas fa-file-alt",
+                color: "yellow",
+                file: "reflection-journal.pdf"
+            },
+            {
+                id: 4,
+                name: "Team Building Activities",
+                description: "Collection of team building exercises and instructions",
+                category: "activities",
+                type: "pdf",
+                size: 5.7,
+                date: "2023-10-08",
+                downloads: 29,
+                icon: "fas fa-hiking",
+                color: "purple",
+                file: "team-activities.pdf"
+            },
+            {
+                id: 5,
+                name: "Mindfulness Meditation Audio",
+                description: "Guided meditation sessions for mindfulness practice",
+                category: "media",
+                type: "audio",
+                size: 15.3,
+                date: "2023-10-05",
+                downloads: 51,
+                icon: "fas fa-music",
+                color: "red",
+                file: "meditation-sessions.zip"
+            },
+            {
+                id: 6,
+                name: "Emotional Regulation Toolkit",
+                description: "Tools and techniques for managing emotions effectively",
+                category: "tools",
+                type: "pdf",
+                size: 2.4,
+                date: "2023-10-03",
+                downloads: 45,
+                icon: "fas fa-tools",
+                color: "indigo",
+                file: "emotional-toolkit.pdf"
+            },
+            {
+                id: 7,
+                name: "Progress Assessment Form",
+                description: "Form for evaluating participant progress at different stages",
+                category: "forms",
+                type: "doc",
+                size: 0.8,
+                date: "2023-10-14",
+                downloads: 33,
+                icon: "fas fa-file-word",
+                color: "yellow",
+                file: "assessment-form.docx"
+            },
+            {
+                id: 8,
+                name: "Bootcamp Introduction Video",
+                description: "Welcome video explaining the bootcamp philosophy and approach",
+                category: "media",
+                type: "video",
+                size: 45.2,
+                date: "2023-10-01",
+                downloads: 28,
+                icon: "fas fa-video",
+                color: "red",
+                file: "intro-video.mp4"
+            },
+            {
+                id: 9,
+                name: "Weekly Planning Template",
+                description: "Template for planning weekly goals and activities",
+                category: "tools",
+                type: "doc",
+                size: 1.2,
+                date: "2023-10-11",
+                downloads: 36,
+                icon: "fas fa-calendar-alt",
+                color: "indigo",
+                file: "weekly-plan.docx"
+            },
+            {
+                id: 10,
+                name: "Facilitator Guide",
+                description: "Complete guide for bootcamp facilitators and staff",
+                category: "guides",
+                type: "pdf",
+                size: 4.5,
+                date: "2023-10-07",
+                downloads: 22,
+                icon: "fas fa-user-tie",
+                color: "green",
+                file: "facilitator-guide.pdf"
+            },
+            {
+                id: 11,
+                name: "Outdoor Challenge Activities",
+                description: "Set of outdoor challenges and adventure activities",
+                category: "activities",
+                type: "pdf",
+                size: 3.9,
+                date: "2023-10-09",
+                downloads: 31,
+                icon: "fas fa-tree",
+                color: "purple",
+                file: "outdoor-challenges.pdf"
+            },
+            {
+                id: 12,
+                name: "Progress Dashboard",
+                description: "Interactive dashboard for visualizing participant progress",
+                category: "progress",
+                type: "html",
+                size: 8.7,
+                date: "2023-10-13",
+                downloads: 26,
+                icon: "fas fa-tachometer-alt",
+                color: "blue",
+                file: "progress-dashboard.html"
+            }
+        ];
+
+        // DOM elements
+        const elements = {
+            searchInput: document.getElementById('searchInput'),
+            categoryFilter: document.getElementById('categoryFilter'),
+            clearSearch: document.getElementById('clearSearch'),
+            quickFilters: document.getElementById('quickFilters'),
+            totalFiles: document.getElementById('totalFiles'),
+            recentFiles: document.getElementById('recentFiles'),
+            categoriesCount: document.getElementById('categoriesCount'),
+            downloadCount: document.getElementById('downloadCount'),
+            filesGrid: document.getElementById('filesGrid'),
+            fileCount: document.getElementById('fileCount'),
+            noResults: document.getElementById('noResults'),
+            progressCount: document.getElementById('progressCount'),
+            guidesCount: document.getElementById('guidesCount'),
+            activitiesCount: document.getElementById('activitiesCount'),
+            formsCount: document.getElementById('formsCount'),
+            mediaCount: document.getElementById('mediaCount'),
+            toolsCount: document.getElementById('toolsCount'),
+            recentTable: document.getElementById('recentTable'),
+            fileModal: document.getElementById('fileModal'),
+            modalFileName: document.getElementById('modalFileName'),
+            modalFileType: document.getElementById('modalFileType'),
+            modalFileCategory: document.getElementById('modalFileCategory'),
+            modalFileDescription: document.getElementById('modalFileDescription'),
+            modalFileSize: document.getElementById('modalFileSize'),
+            modalFileDate: document.getElementById('modalFileDate'),
+            modalFileDownloads: document.getElementById('modalFileDownloads'),
+            downloadFile: document.getElementById('downloadFile'),
+            viewFile: document.getElementById('viewFile'),
+            closeModal: document.getElementById('closeModal'),
+            themeToggle: document.getElementById('themeToggle'),
+            lastUpdated: document.getElementById('lastUpdated')
+        };
+
+        // App state
+        let state = {
+            filteredFiles: [],
+            searchTerm: '',
+            currentCategory: 'all',
+            currentFile: null
+        };
+
+        // Initialize the app
+        function init() {
+            state.filteredFiles = [...fileData];
+            updateUI();
+            setupEventListeners();
+            updateLastUpdated();
+        }
+
+        // Update the UI with current data
+        function updateUI() {
+            updateFileGrid();
+            updateStats();
+            updateCategoryCounts();
+            updateRecentTable();
+            updateFileCount();
+        }
+
+        // Update file grid based on filters
+        function updateFileGrid() {
+            elements.filesGrid.innerHTML = '';
+            
+            if (state.filteredFiles.length === 0) {
+                elements.noResults.classList.remove('hidden');
+                return;
+            }
+            
+            elements.noResults.classList.add('hidden');
+            
+            state.filteredFiles.forEach(file => {
+                const fileElement = document.createElement('div');
+                fileElement.className = 'bg-white rounded-xl shadow-md p-5 card-hover file-card';
+                
+                const iconColor = getColorClass(file.color);
+                
+                fileElement.innerHTML = `
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 ${iconColor} rounded-lg flex items-center justify-center text-white text-xl file-icon">
+                            <i class="${file.icon}"></i>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getTypeColorClass(file.type)}">
+                            ${file.type.toUpperCase()}
+                        </span>
+                    </div>
+                    <h3 class="font-bold text-gray-800 mb-2 truncate">${highlightSearchTerm(file.name)}</h3>
+                    <p class="text-sm text-gray-600 mb-4 line-clamp-2">${file.description}</p>
+                    <div class="flex justify-between items-center text-xs text-gray-500">
+                        <span>${formatFileSize(file.size)}</span>
+                        <span>${formatDate(file.date)}</span>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-xs text-gray-500">${file.downloads} downloads</span>
+                        <button class="view-file-btn text-blue-500 hover:text-blue-700 text-sm font-medium transition-colors" data-id="${file.id}">
+                            View Details
+                        </button>
+                    </div>
+                `;
+                
+                elements.filesGrid.appendChild(fileElement);
+            });
+            
+            // Add event listeners to view file buttons
+            document.querySelectorAll('.view-file-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    openFileModal(id);
+                });
+            });
+        }
+
+        // Update statistics
+        function updateStats() {
+            elements.totalFiles.textContent = fileData.length;
+            
+            // Calculate files added in the last 7 days
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+            const recentCount = fileData.filter(file => new Date(file.date) >= oneWeekAgo).length;
+            elements.recentFiles.textContent = recentCount;
+            
+            // Calculate unique categories
+            const categories = [...new Set(fileData.map(file => file.category))];
+            elements.categoriesCount.textContent = categories.length;
+            
+            // Calculate total downloads
+            const totalDownloads = fileData.reduce((sum, file) => sum + file.downloads, 0);
+            elements.downloadCount.textContent = totalDownloads;
+        }
+
+        // Update category counts
+        function updateCategoryCounts() {
+            const counts = {
+                progress: fileData.filter(file => file.category === 'progress').length,
+                guides: fileData.filter(file => file.category === 'guides').length,
+                activities: fileData.filter(file => file.category === 'activities').length,
+                forms: fileData.filter(file => file.category === 'forms').length,
+                media: fileData.filter(file => file.category === 'media').length,
+                tools: fileData.filter(file => file.category === 'tools').length
+            };
+            
+            elements.progressCount.textContent = `${counts.progress} files`;
+            elements.guidesCount.textContent = `${counts.guides} files`;
+            elements.activitiesCount.textContent = `${counts.activities} files`;
+            elements.formsCount.textContent = `${counts.forms} files`;
+            elements.mediaCount.textContent = `${counts.media} files`;
+            elements.toolsCount.textContent = `${counts.tools} files`;
+        }
+
+        // Update recent files table
+        function updateRecentTable() {
+            elements.recentTable.innerHTML = '';
+            
+            // Sort files by date (newest first) and take the first 5
+            const recentFiles = [...fileData]
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 5);
+            
+            if (recentFiles.length === 0) {
+                elements.recentTable.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="px-4 py-4 text-center text-gray-500">No files available</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            recentFiles.forEach(file => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 ${getColorClass(file.color)} rounded flex items-center justify-center text-white mr-3">
+                                <i class="${file.icon} text-sm"></i>
+                            </div>
+                            <div class="text-sm font-medium text-gray-900">${file.name}</div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCategoryColorClass(file.category)}">
+                            ${capitalizeFirstLetter(file.category)}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        ${file.type.toUpperCase()}
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        ${formatDate(file.date)}
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                        <button class="text-blue-600 hover:text-blue-900 view-file-btn mr-3" data-id="${file.id}">View</button>
+                        <button class="text-green-600 hover:text-green-900 download-file-btn" data-id="${file.id}">Download</button>
+                    </td>
+                `;
+                
+                elements.recentTable.appendChild(row);
+            });
+            
+            // Add event listeners to buttons in the table
+            document.querySelectorAll('.view-file-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    openFileModal(id);
+                });
+            });
+            
+            document.querySelectorAll('.download-file-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    downloadFile(id);
+                });
+            });
+        }
+
+        // Update file count text
+        function updateFileCount() {
+            const count = state.filteredFiles.length;
+            elements.fileCount.textContent = `Showing ${count} file${count !== 1 ? 's' : ''}`;
+        }
+
+        // Filter files based on search term and category
+        function filterFiles() {
+            state.filteredFiles = fileData.filter(file => {
+                const matchesSearch = file.name.toLowerCase().includes(state.searchTerm.toLowerCase()) || 
+                                     file.description.toLowerCase().includes(state.searchTerm.toLowerCase());
+                
+                const matchesCategory = state.currentCategory === 'all' || file.category === state.currentCategory;
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            updateUI();
+        }
+
+        // Open file modal
+        function openFileModal(id) {
+            state.currentFile = fileData.find(file => file.id === id);
+            
+            if (!state.currentFile) return;
+            
+            elements.modalFileName.textContent = state.currentFile.name;
+            elements.modalFileType.textContent = state.currentFile.type.toUpperCase();
+            elements.modalFileCategory.textContent = capitalizeFirstLetter(state.currentFile.category);
+            elements.modalFileDescription.textContent = state.currentFile.description;
+            elements.modalFileSize.textContent = formatFileSize(state.currentFile.size);
+            elements.modalFileDate.textContent = formatDate(state.currentFile.date);
+            elements.modalFileDownloads.textContent = state.currentFile.downloads;
+            
+            // Update type badge color
+            elements.modalFileType.className = `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getTypeColorClass(state.currentFile.type)}`;
+            
+            elements.fileModal.classList.remove('hidden');
+        }
+
+        // Close file modal
+        function closeFileModal() {
+            elements.fileModal.classList.add('hidden');
+            state.currentFile = null;
+        }
+
+        // Download file (simulated)
+        function downloadFile(id) {
+            const file = fileData.find(f => f.id === id);
+            if (!file) return;
+            
+            // Increment download count
+            file.downloads++;
+            
+            // In a real app, this would trigger an actual download
+            alert(`Downloading: ${file.name}`);
+            
+            // Update UI to reflect new download count
+            updateUI();
+            closeFileModal();
+        }
+
+        // Highlight search term in text
+        function highlightSearchTerm(text) {
+            if (!state.searchTerm) return text;
+            
+            const regex = new RegExp(`(${state.searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+
+        // Format file size
+        function formatFileSize(size) {
+            return `${size} MB`;
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        // Capitalize first letter
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        // Get color class based on color name
+        function getColorClass(color) {
+            const colorMap = {
+                blue: 'bg-blue-500',
+                green: 'bg-green-500',
+                purple: 'bg-purple-500',
+                yellow: 'bg-yellow-500',
+                red: 'bg-red-500',
+                indigo: 'bg-indigo-500'
+            };
+            
+            return colorMap[color] || 'bg-gray-500';
+        }
+
+        // Get type color class
+        function getTypeColorClass(type) {
+            const typeMap = {
+                pdf: 'bg-red-100 text-red-800',
+                doc: 'bg-blue-100 text-blue-800',
+                html: 'bg-green-100 text-green-800',
+                audio: 'bg-purple-100 text-purple-800',
+                video: 'bg-indigo-100 text-indigo-800'
+            };
+            
+            return typeMap[type] || 'bg-gray-100 text-gray-800';
+        }
+
+        // Get category color class
+        function getCategoryColorClass(category) {
+            const categoryMap = {
+                progress: 'bg-blue-100 text-blue-800',
+                guides: 'bg-green-100 text-green-800',
+                activities: 'bg-purple-100 text-purple-800',
+                forms: 'bg-yellow-100 text-yellow-800',
+                media: 'bg-red-100 text-red-800',
+                tools: 'bg-indigo-100 text-indigo-800'
+            };
+            
+            return categoryMap[category] || 'bg-gray-100 text-gray-800';
+        }
+
+        // Update last updated timestamp
+        function updateLastUpdated() {
+            const now = new Date();
+            elements.lastUpdated.textContent = now.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Search input
+            elements.searchInput.addEventListener('input', function() {
+                state.searchTerm = this.value;
+                filterFiles();
+            });
+            
+            // Category filter
+            elements.categoryFilter.addEventListener('change', function() {
+                state.currentCategory = this.value;
+                filterFiles();
+            });
+            
+            // Clear search
+            elements.clearSearch.addEventListener('click', function() {
+                elements.searchInput.value = '';
+                state.searchTerm = '';
+                elements.categoryFilter.value = 'all';
+                state.currentCategory = 'all';
+                filterFiles();
+            });
+            
+            // Quick filters
+            document.querySelectorAll('.quick-filter').forEach(button => {
+                button.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    state.currentCategory = category;
+                    elements.categoryFilter.value = category;
+                    filterFiles();
+                });
+            });
+            
+            // Category cards
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    state.currentCategory = category;
+                    elements.categoryFilter.value = category;
+                    filterFiles();
+                    
+                    // Scroll to files section
+                    document.getElementById('files').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+            
+            // Close modal
+            elements.closeModal.addEventListener('click', closeFileModal);
+            
+            // Close modal when clicking outside
+            elements.fileModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeFileModal();
+                }
+            });
+            
+            // Download file button
+            elements.downloadFile.addEventListener('click', function() {
+                if (state.currentFile) {
+                    downloadFile(state.currentFile.id);
+                }
+            });
+            
+            // View file button
+            elements.viewFile.addEventListener('click', function() {
+                if (state.currentFile) {
+                    // In a real app, this would open the file in a new tab or viewer
+                    alert(`Opening: ${state.currentFile.name}`);
+                }
+            });
+            
+            // Theme toggle
+            elements.themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark');
+                const icon = this.querySelector('i');
+                if (document.body.classList.contains('dark')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                    document.body.classList.add('bg-gray-900', 'text-white');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                    document.body.classList.remove('bg-gray-900', 'text-white');
+                }
+            });
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
