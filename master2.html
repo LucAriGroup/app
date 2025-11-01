@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healing Path - Recovery Courses & Books</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --healing: #8b5cf6;
+            --mindfulness: #06b6d4;
+            --purpose: #ec4899;
+            --support: #f97316;
+            --spiritual: #d946ef;
+            --creative: #84cc16;
+            --prevention: #ef4444;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .heading-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .card {
+            transition: all 0.4s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px) rotateX(3deg);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-icon {
+            transition: all 0.5s ease;
+        }
+        
+        .card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .category-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-container {
+            transition: all 0.3s ease;
+        }
+        
+        .search-container:focus-within {
+            transform: scale(1.02);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .grid-item {
+            transition: all 0.5s ease;
+        }
+        
+        .grid-item.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            height: 0;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .grid-item.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .pulse-slow {
+            animation: pulse 3s infinite;
+        }
+        
+        .healing-bg {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.9) 100%);
+            backdrop-filter: blur(10px);
+        }
+        
+        .type-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        .healing-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .inspiration-quote {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .inspiration-quote::before {
+            content: """;
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            font-size: 120px;
+            color: rgba(255,255,255,0.1);
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <div class="floating inline-block mb-4">
+                <div class="bg-white/20 backdrop-blur-sm rounded-full p-4">
+                    <i class="fas fa-heart text-white text-4xl"></i>
+                </div>
+            </div>
+            <h1 class="heading-font text-4xl md:text-5xl font-bold text-white mb-4">Healing Path</h1>
+            <p class="text-xl text-white/90 max-w-2xl mx-auto">Recovery Courses & Books Directory</p>
+            
+            <!-- Inspiration Quote -->
+            <div class="inspiration-quote max-w-3xl mx-auto mt-8 p-6 rounded-2xl bg-white/10 backdrop-blur-sm">
+                <p class="text-white text-lg italic text-center">"Recovery is not a race. You don't have to feel guilty if it takes you longer than you thought it would."</p>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="max-w-2xl mx-auto mt-8 search-container">
+                <div class="relative">
+                    <input type="text" id="searchInput" placeholder="Search courses and books..." 
+                           class="w-full py-4 px-6 rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg">
+                    <i class="fas fa-search absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+            
+            <!-- Category Filters -->
+            <div class="flex flex-wrap justify-center gap-3 mt-6">
+                <button class="category-btn active px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white" data-category="all">All Resources</button>
+                <button class="category-btn px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white" data-category="understanding">Understanding Addiction</button>
+                <button class="category-btn px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white" data-category="healing">Healing & Recovery</button>
+                <button class="category-btn px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white" data-category="mindset">Mindset & Emotional Strength</button>
+                <button class="category-btn px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white" data-category="purpose">Purpose & Life Skills</button>
+                <button class="category-btn px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white" data-category="support">For Families & Mentors</button>
+                <button class="category-btn px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white" data-category="spiritual">Spiritual Healing</button>
+                <button class="category-btn px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white" data-category="creative">Creative Expression</button>
+                <button class="category-btn px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white" data-category="prevention">Relapse Prevention</button>
+            </div>
+        </header>
+        
+        <!-- Stats Bar -->
+        <div class="flex flex-wrap justify-center gap-6 mb-12">
+            <div class="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center text-white min-w-[120px]">
+                <div class="text-2xl font-bold">20</div>
+                <div class="text-sm">Total Resources</div>
+            </div>
+            <div class="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center text-white min-w-[120px]">
+                <div class="text-2xl font-bold">10</div>
+                <div class="text-sm">Courses</div>
+            </div>
+            <div class="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center text-white min-w-[120px]">
+                <div class="text-2xl font-bold">10</div>
+                <div class="text-sm">Books</div>
+            </div>
+        </div>
+        
+        <!-- Resources Grid -->
+        <main>
+            <div id="resourcesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Resource cards will be dynamically generated here -->
+            </div>
+            
+            <!-- No Results Message -->
+            <div id="noResults" class="hidden text-center py-12">
+                <i class="fas fa-search text-6xl text-white/50 mb-4"></i>
+                <h3 class="text-2xl text-white font-semibold">No resources found</h3>
+                <p class="text-white/70 mt-2">Try adjusting your search or filter to find what you're looking for.</p>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="mt-16 text-center text-white/70">
+            <p>Healing Path &copy; 2023 - Resources for Recovery and Growth</p>
+        </footer>
+    </div>
+
+    <script>
+        // Resource data
+        const resources = [
+            { 
+                id: 1, 
+                title: "Breaking the Chains: Understanding the Science of Addiction", 
+                description: "A deep look into how addiction rewires the brain, emotional triggers, and recovery mechanisms.", 
+                category: "understanding", 
+                type: "course",
+                icon: "fas fa-brain", 
+                color: "bg-purple-500",
+                link: "course1.html" 
+            },
+            { 
+                id: 2, 
+                title: "Addiction Unmasked: Why We Do What Destroys Us", 
+                description: "A mix of neuroscience, psychology, and personal stories that help readers see addiction in a new light.", 
+                category: "understanding", 
+                type: "book",
+                icon: "fas fa-book-open", 
+                color: "bg-purple-500",
+                link: "book1.html" 
+            },
+            { 
+                id: 3, 
+                title: "The Road to Recovery: A 12-Week Personal Healing Journey", 
+                description: "Includes worksheets, daily routines, affirmations, and guided reflection for personal growth.", 
+                category: "healing", 
+                type: "course",
+                icon: "fas fa-road", 
+                color: "bg-blue-500",
+                link: "course2.html" 
+            },
+            { 
+                id: 4, 
+                title: "Healing the Wounded Soul: Recovery Through Self-Compassion", 
+                description: "Focus on trauma-informed recovery — learning to forgive oneself and build new identity.", 
+                category: "healing", 
+                type: "book",
+                icon: "fas fa-heart", 
+                color: "bg-blue-500",
+                link: "book2.html" 
+            },
+            { 
+                id: 5, 
+                title: "Rebuilding Trust: Healing Relationships After Addiction", 
+                description: "How to reconnect with family and friends, set boundaries, and rebuild credibility.", 
+                category: "healing", 
+                type: "course",
+                icon: "fas fa-hands-helping", 
+                color: "bg-blue-500",
+                link: "course3.html" 
+            },
+            { 
+                id: 6, 
+                title: "Mind Over Craving: Mindfulness & Meditation for Recovery", 
+                description: "Teaches breathing, grounding, and mindfulness tools for emotional regulation.", 
+                category: "mindset", 
+                type: "course",
+                icon: "fas fa-spa", 
+                color: "bg-cyan-500",
+                link: "course4.html" 
+            },
+            { 
+                id: 7, 
+                title: "From Chaos to Clarity: Rewiring the Addicted Mind", 
+                description: "Stories and exercises to shift from destructive thinking to empowered choices.", 
+                category: "mindset", 
+                type: "book",
+                icon: "fas fa-lightbulb", 
+                color: "bg-cyan-500",
+                link: "book3.html" 
+            },
+            { 
+                id: 8, 
+                title: "Emotional Mastery for Recovery: Handling Triggers and Temptations", 
+                description: "Interactive lessons on anger, shame, anxiety, and emotional intelligence.", 
+                category: "mindset", 
+                type: "course",
+                icon: "fas fa-brain", 
+                color: "bg-cyan-500",
+                link: "course5.html" 
+            },
+            { 
+                id: 9, 
+                title: "Purpose After Pain: Discovering Meaning Beyond Addiction", 
+                description: "Helps learners identify their 'why', set new life goals, and create a recovery plan.", 
+                category: "purpose", 
+                type: "course",
+                icon: "fas fa-bullseye", 
+                color: "bg-pink-500",
+                link: "course6.html" 
+            },
+            { 
+                id: 10, 
+                title: "Rise Again: Turning Rock Bottom Into a Foundation for Success", 
+                description: "Inspirational stories of people who built new lives after addiction.", 
+                category: "purpose", 
+                type: "book",
+                icon: "fas fa-mountain", 
+                color: "bg-pink-500",
+                link: "book4.html" 
+            },
+            { 
+                id: 11, 
+                title: "Building a New You: Life Skills for Sobriety", 
+                description: "Covers budgeting, employment readiness, time management, and self-discipline.", 
+                category: "purpose", 
+                type: "course",
+                icon: "fas fa-tools", 
+                color: "bg-pink-500",
+                link: "course7.html" 
+            },
+            { 
+                id: 12, 
+                title: "Start Fresh: A Practical Guide to Reinventing Your Life in Recovery", 
+                description: "Step-by-step guide to rebuilding your life — from mindset to career and relationships.", 
+                category: "purpose", 
+                type: "book",
+                icon: "fas fa-seedling", 
+                color: "bg-pink-500",
+                link: "book5.html" 
+            },
+            { 
+                id: 13, 
+                title: "Loving Without Losing Yourself: A Family Guide to Addiction", 
+                description: "Supportive tools for parents, partners, and friends of those struggling.", 
+                category: "support", 
+                type: "book",
+                icon: "fas fa-users", 
+                color: "bg-orange-500",
+                link: "book6.html" 
+            },
+            { 
+                id: 14, 
+                title: "Mentorship for Recovery: How to Support Without Enabling", 
+                description: "Designed for counselors, community leaders, or mentors working with youth.", 
+                category: "support", 
+                type: "course",
+                icon: "fas fa-hands", 
+                color: "bg-orange-500",
+                link: "course8.html" 
+            },
+            { 
+                id: 15, 
+                title: "Faith and Freedom: A Spiritual Path to Sobriety", 
+                description: "Uses faith, scripture, and community to empower recovery.", 
+                category: "spiritual", 
+                type: "course",
+                icon: "fas fa-pray", 
+                color: "bg-purple-500",
+                link: "course9.html" 
+            },
+            { 
+                id: 16, 
+                title: "Surrender and Strength: Finding God in Recovery", 
+                description: "Personal reflections and spiritual exercises for those seeking faith-based healing.", 
+                category: "spiritual", 
+                type: "book",
+                icon: "fas fa-church", 
+                color: "bg-purple-500",
+                link: "book7.html" 
+            },
+            { 
+                id: 17, 
+                title: "Art Therapy for Recovery: Express, Heal, and Transform", 
+                description: "Participants use art, journaling, and music to release emotions and discover self-expression.", 
+                category: "creative", 
+                type: "course",
+                icon: "fas fa-palette", 
+                color: "bg-lime-500",
+                link: "course10.html" 
+            },
+            { 
+                id: 18, 
+                title: "Write Your Way Out: Journaling Prompts for Healing Addiction", 
+                description: "Includes 90 days of reflective writing prompts and exercises.", 
+                category: "creative", 
+                type: "book",
+                icon: "fas fa-pen-nib", 
+                color: "bg-lime-500",
+                link: "book8.html" 
+            },
+            { 
+                id: 19, 
+                title: "The Relapse Shield: Building Lasting Habits for Sobriety", 
+                description: "Teaches relapse prevention, support systems, and accountability tools.", 
+                category: "prevention", 
+                type: "course",
+                icon: "fas fa-shield-alt", 
+                color: "bg-red-500",
+                link: "course11.html" 
+            },
+            { 
+                id: 20, 
+                title: "Living Free: Staying Strong After Recovery", 
+                description: "A practical and motivational guide for long-term sobriety maintenance.", 
+                category: "prevention", 
+                type: "book",
+                icon: "fas fa-dove", 
+                color: "bg-red-500",
+                link: "book9.html" 
+            }
+        ];
+
+        // DOM Elements
+        const resourcesGrid = document.getElementById('resourcesGrid');
+        const searchInput = document.getElementById('searchInput');
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const noResults = document.getElementById('noResults');
+
+        // Initialize the directory
+        function initDirectory() {
+            renderResources(resources);
+            setupEventListeners();
+            
+            // Add fade-in animation to cards
+            setTimeout(() => {
+                const cards = document.querySelectorAll('.grid-item');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                    }, index * 100);
+                });
+            }, 300);
+        }
+
+        // Render resources to the grid
+        function renderResources(resourcesToRender) {
+            resourcesGrid.innerHTML = '';
+            
+            if (resourcesToRender.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            } else {
+                noResults.classList.add('hidden');
+            }
+            
+            resourcesToRender.forEach((resource, index) => {
+                const resourceCard = document.createElement('div');
+                resourceCard.className = 'grid-item fade-in card healing-bg rounded-2xl shadow-lg overflow-hidden';
+                resourceCard.setAttribute('data-category', resource.category);
+                resourceCard.setAttribute('data-type', resource.type);
+                
+                const typeText = resource.type === 'course' ? 'Course' : 'Book';
+                const typeClass = resource.type === 'course' ? 'bg-indigo-100 text-indigo-800' : 'bg-amber-100 text-amber-800';
+                
+                resourceCard.innerHTML = `
+                    <div class="p-6">
+                        <div class="flex items-start mb-4">
+                            <div class="${resource.color} rounded-xl p-3 mr-4 card-icon">
+                                <i class="${resource.icon} text-white text-xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="text-xl font-bold text-gray-800">${resource.title}</h3>
+                                    <span class="type-badge ${typeClass} font-medium">${typeText}</span>
+                                </div>
+                                <p class="text-gray-600 mt-2">${resource.description}</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mt-6">
+                            <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm capitalize">${resource.category.replace('-', ' ')}</span>
+                            <a href="${resource.link}" class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors duration-300 flex items-center">
+                                Explore <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                
+                resourcesGrid.appendChild(resourceCard);
+            });
+        }
+
+        // Filter resources based on search and category
+        function filterResources() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
+            
+            const filteredResources = resources.filter(resource => {
+                const matchesSearch = resource.title.toLowerCase().includes(searchTerm) || 
+                                     resource.description.toLowerCase().includes(searchTerm);
+                const matchesCategory = activeCategory === 'all' || resource.category === activeCategory;
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            renderResources(filteredResources);
+            
+            // Animate the transition
+            setTimeout(() => {
+                const cards = document.querySelectorAll('.grid-item');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                    }, index * 50);
+                });
+            }, 100);
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Search input
+            searchInput.addEventListener('input', filterResources);
+            
+            // Category buttons
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    filterResources();
+                });
+            });
+        }
+
+        // Initialize the directory when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initDirectory);
+    </script>
+</body>
+</html>
