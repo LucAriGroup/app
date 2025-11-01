@@ -28,47 +28,22 @@
             <p class="text-lg text-blue-200">Enter your Bybit UID to retrieve account information and trading data</p>
         </header>
 
-        <!-- Debug Panel -->
-        <div class="max-w-4xl mx-auto mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <i class="fas fa-bug text-yellow-500 text-xl mr-3"></i>
-                    <div>
-                        <h3 class="font-semibold text-yellow-800">Debug Mode</h3>
-                        <p class="text-yellow-700 text-sm">Troubleshooting data loading issues</p>
-                    </div>
+        <!-- Connection Status -->
+        <div id="connectionStatus" class="max-w-4xl mx-auto mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-triangle text-red-500 text-xl mr-3"></i>
+                <div>
+                    <h3 class="font-semibold text-red-800">Connection Issue Detected</h3>
+                    <p class="text-red-700">Google Sheets data is not loading. Only demo data is available.</p>
                 </div>
-                <button onclick="toggleDebug()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
-                    Toggle Debug
-                </button>
             </div>
-            <div id="debugInfo" class="mt-3 hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div>
-                        <strong>Data Load Status:</strong> 
-                        <span id="dataStatus">Not loaded</span>
-                    </div>
-                    <div>
-                        <strong>Total Records:</strong> 
-                        <span id="recordCount">0</span>
-                    </div>
-                    <div>
-                        <strong>First Record UID:</strong> 
-                        <span id="firstUID">-</span>
-                    </div>
-                    <div>
-                        <strong>Last Error:</strong> 
-                        <span id="lastError">None</span>
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <button onclick="viewRawData()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm mr-2">
-                        View Raw Data
-                    </button>
-                    <button onclick="forceReload()" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
-                        Force Reload
-                    </button>
-                </div>
+            <div class="mt-3 flex gap-2">
+                <button onclick="testGoogleScript()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">
+                    Test Google Script
+                </button>
+                <button onclick="showDataFixGuide()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm">
+                    Fix Data Connection
+                </button>
             </div>
         </div>
 
@@ -94,7 +69,6 @@
                             placeholder="Enter your Bybit UID (e.g., 485218082)" 
                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
                         >
-                        <p class="text-sm text-gray-500 mt-1">Try both numeric and text formats</p>
                     </div>
 
                     <div class="flex gap-4">
@@ -119,7 +93,7 @@
                 <div class="mt-6 p-4 bg-blue-50 rounded-lg">
                     <h4 class="font-semibold text-blue-800 mb-2 flex items-center">
                         <i class="fas fa-lightbulb mr-2"></i>
-                        Quick Test UIDs:
+                        Available Demo UIDs:
                     </h4>
                     <div class="flex flex-wrap gap-2">
                         <button onclick="setUID('485218082')" class="text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-2 rounded-lg transition duration-150">
@@ -147,7 +121,7 @@
                                     <i class="fas fa-user-check text-green-500 mr-2"></i>
                                     User Found
                                 </h3>
-                                <p class="text-gray-600" id="userSummary">UID: <span id="foundUID"></span></p>
+                                <p class="text-gray-600">UID: <span id="foundUID"></span> • <span id="dataSource" class="text-sm bg-blue-100 text-blue-700 px-2 py-1 rounded">Demo Data</span></p>
                             </div>
                             <div class="text-right">
                                 <div class="text-2xl font-bold text-green-600" id="kycLevel"></div>
@@ -183,12 +157,11 @@
                     <h3 class="text-2xl font-bold text-gray-800 mb-2">User Not Found</h3>
                     <p class="text-gray-600 mb-4" id="notFoundMessage">The UID you entered doesn't exist in our database.</p>
                     <div class="text-left bg-yellow-50 p-4 rounded-lg">
-                        <h4 class="font-semibold text-yellow-800 mb-2">Troubleshooting Tips:</h4>
+                        <h4 class="font-semibold text-yellow-800 mb-2">Current Status:</h4>
                         <ul class="text-sm text-yellow-700 space-y-1">
-                            <li>• Check that the UID exists in your Google Sheet</li>
-                            <li>• Try the UID as both number and text (e.g., "485218082" vs 485218082)</li>
-                            <li>• Verify the column name in your sheet is exactly "UID"</li>
-                            <li>• Check that your Google Apps Script is returning data</li>
+                            <li id="statusLiveData" class="text-red-600">• ❌ Live Google Sheets data: Not connected</li>
+                            <li class="text-green-600">• ✅ Demo data: Available (use demo UIDs above)</li>
+                            <li class="text-yellow-600">• Only demo UIDs 485218082, 485218083, 485218084 are available</li>
                         </ul>
                     </div>
                 </div>
@@ -201,73 +174,249 @@
                 </div>
             </div>
 
-            <!-- Data Preview -->
-            <div id="dataPreview" class="card-gradient rounded-2xl shadow-2xl p-6 mt-8 hidden">
+            <!-- Manual Data Input -->
+            <div class="card-gradient rounded-2xl shadow-2xl p-6 mt-8">
                 <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                    <i class="fas fa-table text-blue-500 mr-2"></i>
-                    Loaded Data Preview
+                    <i class="fas fa-plug text-orange-500 mr-2"></i>
+                    Manual Data Input (Temporary Solution)
                 </h3>
-                <div id="previewContent" class="overflow-x-auto">
-                    <table class="min-w-full text-sm">
-                        <thead class="bg-gray-100">
-                            <tr id="previewHeaders"></tr>
-                        </thead>
-                        <tbody id="previewBody" class="divide-y divide-gray-200"></tbody>
-                    </table>
+                <p class="text-gray-600 mb-4">Since Google Sheets isn't connecting, you can paste your data directly here:</p>
+                <textarea 
+                    id="manualDataInput" 
+                    placeholder='Paste JSON data here. Example: [{"UID": 123456, "VIP Level": "VIP 1", ...}]' 
+                    class="w-full h-40 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-mono"
+                ></textarea>
+                <div class="flex gap-2 mt-4">
+                    <button onclick="loadManualData()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                        Load Manual Data
+                    </button>
+                    <button onclick="loadSampleJSON()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                        Load Sample JSON
+                    </button>
+                    <button onclick="clearManualData()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+                        Clear
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Raw Data Modal -->
-    <div id="rawDataModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <!-- Data Fix Guide Modal -->
+    <div id="fixGuideModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
         <div class="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-96 overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-semibold">Raw Data from Google Sheets</h3>
-                <button onclick="closeRawData()" class="text-gray-500 hover:text-gray-700">
+                <h3 class="text-xl font-semibold">Fix Google Sheets Connection</h3>
+                <button onclick="hideFixGuide()" class="text-gray-500 hover:text-gray-700">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <pre id="modalRawData" class="bg-gray-800 text-green-400 p-4 rounded overflow-x-auto text-xs"></pre>
+            <div class="space-y-4 text-sm">
+                <div class="bg-red-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-red-800 mb-2">Current Issue: Data Not Loading</h4>
+                    <p>Your Google Apps Script URL is correct, but no data is being returned.</p>
+                </div>
+
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-blue-800 mb-2">Step 1: Check Your Google Apps Script</h4>
+                    <p>Make sure your script has this exact code:</p>
+                    <pre class="bg-gray-800 text-green-400 p-3 rounded mt-2 text-xs overflow-x-auto">
+function doGet() {
+  try {
+    // Replace with your actual sheet ID or use getActiveSheet()
+    var sheet = SpreadsheetApp.openById('YOUR_SHEET_ID').getActiveSheet();
+    // OR use: var sheet = SpreadsheetApp.getActiveSheet();
+    
+    var data = sheet.getDataRange().getValues();
+    var headers = data[0];
+    var jsonData = [];
+    
+    for (var i = 1; i < data.length; i++) {
+      var row = {};
+      for (var j = 0; j < headers.length; j++) {
+        row[headers[j]] = data[i][j];
+      }
+      jsonData.push(row);
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify(jsonData))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      error: error.toString(),
+      message: "Check sheet ID and permissions"
+    }))
+    .setMimeType(ContentService.MimeType.JSON);
+  }
+}</pre>
+                </div>
+
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-green-800 mb-2">Step 2: Test Your Script</h4>
+                    <p>Open this URL in your browser to test:</p>
+                    <p class="bg-gray-100 p-2 rounded break-all text-xs mt-2" id="testUrl"></p>
+                    <p class="text-green-700 mt-2">You should see raw JSON data. If you see an error, check your script.</p>
+                </div>
+
+                <div class="bg-yellow-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-yellow-800 mb-2">Step 3: Common Issues</h4>
+                    <ul class="list-disc list-inside space-y-1 text-yellow-700">
+                        <li>Sheet ID is incorrect in the script</li>
+                        <li>Sheet is not shared publicly</li>
+                        <li>No data in the sheet</li>
+                        <li>Script not deployed as web app</li>
+                        <li>Wrong deployment permissions</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         const scriptUrl = 'https://script.google.com/macros/s/AKfycbzf7Faa_Iuqx17TJ-Ok98-1v_Y4hXnnIGHt1XjxszVzb9SMjgIEWx4xVF6VEE9L7by6/exec';
         let allUserData = [];
+        let usingLiveData = false;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('testUrl').textContent = scriptUrl;
             loadAllData();
         });
 
         // Load all data from Google Sheets
         async function loadAllData() {
-            updateDebugInfo('Loading...', 'yellow');
             try {
+                console.log('Attempting to load data from:', scriptUrl);
                 const response = await fetch(scriptUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
+                console.log('Data received from Google Sheets:', data);
                 
                 if (Array.isArray(data) && data.length > 0) {
                     allUserData = data;
-                    updateDebugInfo('Loaded successfully', 'green');
-                    updateRecordCount(data.length);
-                    updateFirstUID(data[0]);
-                    showDataPreview(data);
-                    console.log('Loaded user data:', data);
+                    usingLiveData = true;
+                    updateConnectionStatus('success', `Connected to Google Sheets! Loaded ${data.length} records.`);
+                    console.log('Successfully loaded live data:', data);
                 } else {
-                    throw new Error('No data or invalid format received');
+                    throw new Error('No data or empty array received');
                 }
             } catch (error) {
-                console.error('Error loading data:', error);
-                updateDebugInfo('Load failed', 'red');
-                updateLastError(error.message);
-                // Load sample data if live data fails
-                loadSampleDataset();
+                console.error('Error loading live data:', error);
+                usingLiveData = false;
+                updateConnectionStatus('error', `Google Sheets connection failed: ${error.message}`);
+                // Load demo data
+                loadDemoData();
             }
         }
 
-        // Search by UID with multiple matching strategies
+        // Update connection status display
+        function updateConnectionStatus(type, message) {
+            const statusDiv = document.getElementById('connectionStatus');
+            if (type === 'success') {
+                statusDiv.className = 'max-w-4xl mx-auto mb-6 bg-green-50 border border-green-200 rounded-lg p-4';
+                statusDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
+                        <div>
+                            <h3 class="font-semibold text-green-800">Connected Successfully!</h3>
+                            <p class="text-green-700">${message}</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                statusDiv.className = 'max-w-4xl mx-auto mb-6 bg-red-50 border border-red-200 rounded-lg p-4';
+                statusDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-xl mr-3"></i>
+                        <div>
+                            <h3 class="font-semibold text-red-800">Connection Issue</h3>
+                            <p class="text-red-700">${message}</p>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex gap-2">
+                        <button onclick="testGoogleScript()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">
+                            Test Google Script
+                        </button>
+                        <button onclick="showDataFixGuide()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm">
+                            Fix Data Connection
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Load demo data
+        function loadDemoData() {
+            allUserData = [
+                {
+                    "UID": 485218082,
+                    "VIP Level": "VIP 1",
+                    "User engagement": "Above 180",
+                    "Joined Bybit": "2025-07-04T03:43:26.000Z",
+                    "Source": "CSTAPPTELEGR",
+                    "Remarks": "Active Trader",
+                    "KYC(Lv.)": 1,
+                    "Coin": "USDT",
+                    "First-Time Deposited": "2025-07-05",
+                    "Deposits Amount": 1500,
+                    "TradingAmount": 12500,
+                    "TakerAmount": 8000,
+                    "MakerAmount": 4500,
+                    "Interest": 25.50,
+                    "Fee Profit": 45.75,
+                    "Commissions": 12.30,
+                    "Tradfi Amount": 3200,
+                    "Rebate Coin": "USDT"
+                },
+                {
+                    "UID": 485218083,
+                    "VIP Level": "",
+                    "User engagement": "Below 90",
+                    "Joined Bybit": "2025-08-10T10:20:15.000Z",
+                    "Source": "WEB",
+                    "Remarks": "New User",
+                    "KYC(Lv.)": 0,
+                    "Coin": "USDT",
+                    "First-Time Deposited": "",
+                    "Deposits Amount": 0,
+                    "TradingAmount": 0,
+                    "TakerAmount": 0,
+                    "MakerAmount": 0,
+                    "Interest": 0,
+                    "Fee Profit": 0,
+                    "Commissions": 0,
+                    "Tradfi Amount": 0,
+                    "Rebate Coin": "USDT"
+                },
+                {
+                    "UID": 485218084,
+                    "VIP Level": "VIP 2",
+                    "User engagement": "Above 180",
+                    "Joined Bybit": "2025-06-15T08:30:00.000Z",
+                    "Source": "REFERRAL",
+                    "Remarks": "High Volume",
+                    "KYC(Lv.)": 2,
+                    "Coin": "USDT",
+                    "First-Time Deposited": "2025-06-16",
+                    "Deposits Amount": 5000,
+                    "TradingAmount": 50000,
+                    "TakerAmount": 30000,
+                    "MakerAmount": 20000,
+                    "Interest": 150.25,
+                    "Fee Profit": 280.50,
+                    "Commissions": 75.80,
+                    "Tradfi Amount": 12000,
+                    "Rebate Coin": "USDT"
+                }
+            ];
+            console.log('Loaded demo data:', allUserData);
+        }
+
+        // Search by UID
         async function searchByUID() {
             const uidInput = document.getElementById('uidInput').value.trim();
             
@@ -280,37 +429,25 @@
 
             setTimeout(() => {
                 try {
-                    if (allUserData.length === 0) {
-                        updateNotFoundMessage('No data loaded from Google Sheets. Please check your connection.');
-                        showUserNotFound();
-                        return;
-                    }
-
                     console.log('Searching for UID:', uidInput);
+                    console.log('Available data source:', usingLiveData ? 'Google Sheets' : 'Demo Data');
+                    console.log('Total records:', allUserData.length);
                     console.log('Available UIDs:', allUserData.map(u => u.UID));
 
-                    // Try multiple matching strategies
                     let user = null;
 
-                    // Strategy 1: Exact numeric match
+                    // Try multiple matching strategies
                     const numericUID = Number(uidInput);
                     if (!isNaN(numericUID)) {
                         user = allUserData.find(u => Number(u.UID) === numericUID);
                     }
 
-                    // Strategy 2: String match
                     if (!user) {
                         user = allUserData.find(u => String(u.UID) === uidInput);
                     }
 
-                    // Strategy 3: Case-insensitive string match
                     if (!user) {
                         user = allUserData.find(u => String(u.UID).toLowerCase() === uidInput.toLowerCase());
-                    }
-
-                    // Strategy 4: Partial match
-                    if (!user) {
-                        user = allUserData.find(u => String(u.UID).includes(uidInput));
                     }
 
                     if (user) {
@@ -318,7 +455,7 @@
                         displayUserData(user);
                     } else {
                         console.log('User not found. Available UIDs:', allUserData.map(u => u.UID));
-                        updateNotFoundMessage(`UID "${uidInput}" not found. Available UIDs: ${allUserData.slice(0, 5).map(u => u.UID).join(', ')}${allUserData.length > 5 ? '...' : ''}`);
+                        updateNotFoundMessage(uidInput);
                         showUserNotFound();
                     }
                 } catch (error) {
@@ -339,6 +476,10 @@
             // Update summary
             document.getElementById('foundUID').textContent = user.UID;
             document.getElementById('kycLevel').textContent = user['KYC(Lv.)'] || '0';
+            document.getElementById('dataSource').textContent = usingLiveData ? 'Live Data' : 'Demo Data';
+            document.getElementById('dataSource').className = usingLiveData ? 
+                'text-sm bg-green-100 text-green-700 px-2 py-1 rounded' : 
+                'text-sm bg-blue-100 text-blue-700 px-2 py-1 rounded';
 
             // Display detailed data
             const userDataDiv = document.getElementById('userData');
@@ -355,6 +496,7 @@
                 { label: 'User Engagement', value: user['User engagement'] || 'Unknown', icon: 'activity', color: 'text-green-600' },
                 { label: 'Joined Bybit', value: formatDate(user['Joined Bybit']), icon: 'calendar', color: 'text-blue-600' },
                 { label: 'Source', value: user['Source'] || 'Unknown', icon: 'source', color: 'text-purple-600' },
+                { label: 'Remarks', value: user['Remarks'] || 'None', icon: 'sticky-note', color: 'text-gray-600' },
                 { label: 'Coin', value: user['Coin'] || 'USDT', icon: 'coins', color: 'text-yellow-500' },
                 { label: 'First-Time Deposited', value: user['First-Time Deposited'] || 'Not Yet', icon: 'download', color: 'text-green-500' },
                 { label: 'Deposits Amount', value: formatNumber(user['Deposits Amount'] || 0), icon: 'money-bill-wave', color: 'text-green-600' },
@@ -387,9 +529,22 @@
             document.getElementById('resultsSection').classList.remove('hidden');
             document.getElementById('userFound').classList.add('hidden');
             document.getElementById('userNotFound').classList.remove('hidden');
+            
+            // Update live data status
+            const statusItem = document.getElementById('statusLiveData');
+            if (usingLiveData) {
+                statusItem.className = 'text-green-600';
+                statusItem.innerHTML = '• ✅ Live Google Sheets data: Connected';
+            } else {
+                statusItem.className = 'text-red-600';
+                statusItem.innerHTML = '• ❌ Live Google Sheets data: Not connected';
+            }
         }
 
-        function updateNotFoundMessage(message) {
+        function updateNotFoundMessage(uid) {
+            const message = `UID "${uid}" not found. ${usingLiveData ? 
+                'This UID does not exist in the Google Sheets database.' : 
+                'Only demo UIDs are available since Google Sheets is not connected.'}`;
             document.getElementById('notFoundMessage').textContent = message;
         }
 
@@ -413,141 +568,62 @@
 
         // Load sample data for demonstration
         function loadSampleData() {
-            const sampleUser = {
-                "UID": 485218082,
-                "VIP Level": "VIP 1",
-                "User engagement": "Above 180",
-                "Joined Bybit": "2025-07-04T03:43:26.000Z",
-                "Source": "CSTAPPTELEGR",
-                "Remarks": "Active Trader",
-                "KYC(Lv.)": 1,
-                "Coin": "USDT",
-                "First-Time Deposited": "2025-07-05",
-                "Deposits Amount": 1500,
-                "TradingAmount": 12500,
-                "TakerAmount": 8000,
-                "MakerAmount": 4500,
-                "Interest": 25.50,
-                "Fee Profit": 45.75,
-                "Commissions": 12.30,
-                "Tradfi Amount": 3200,
-                "Rebate Coin": "USDT"
-            };
-            
+            const sampleUser = allUserData[0];
             setUID(sampleUser.UID);
             displayUserData(sampleUser);
         }
 
-        // Sample dataset for fallback
-        function loadSampleDataset() {
-            allUserData = [
-                {
-                    "UID": 485218082,
-                    "VIP Level": "VIP 1",
-                    "User engagement": "Above 180",
-                    "Joined Bybit": "2025-07-04T03:43:26.000Z",
-                    "Source": "CSTAPPTELEGR",
-                    "Remarks": "Active Trader",
-                    "KYC(Lv.)": 1,
-                    "Coin": "USDT",
-                    "First-Time Deposited": "2025-07-05",
-                    "Deposits Amount": 1500,
-                    "TradingAmount": 12500,
-                    "TakerAmount": 8000,
-                    "MakerAmount": 4500,
-                    "Interest": 25.50,
-                    "Fee Profit": 45.75,
-                    "Commissions": 12.30,
-                    "Tradfi Amount": 3200,
-                    "Rebate Coin": "USDT"
-                },
-                {
-                    "UID": "485218083", // Test with string UID
-                    "VIP Level": "",
-                    "User engagement": "Below 90",
-                    "Joined Bybit": "2025-08-10T10:20:15.000Z",
-                    "Source": "WEB",
-                    "Remarks": "New User",
-                    "KYC(Lv.)": 0,
-                    "Coin": "USDT",
-                    "First-Time Deposited": "",
-                    "Deposits Amount": 0,
-                    "TradingAmount": 0,
-                    "TakerAmount": 0,
-                    "MakerAmount": 0,
-                    "Interest": 0,
-                    "Fee Profit": 0,
-                    "Commissions": 0,
-                    "Tradfi Amount": 0,
-                    "Rebate Coin": "USDT"
-                }
-            ];
-            updateDebugInfo('Using sample data', 'yellow');
-            updateRecordCount(allUserData.length);
-            updateFirstUID(allUserData[0]);
-            showDataPreview(allUserData);
+        // Manual data input
+        function loadManualData() {
+            const manualData = document.getElementById('manualDataInput').value.trim();
+            if (!manualData) {
+                alert('Please paste some JSON data first');
+                return;
+            }
+
+            try {
+                const parsedData = JSON.parse(manualData);
+                const dataArray = Array.isArray(parsedData) ? parsedData : [parsedData];
+                
+                allUserData = dataArray;
+                usingLiveData = true;
+                updateConnectionStatus('success', `Loaded ${dataArray.length} records from manual input.`);
+                
+                console.log('Loaded manual data:', dataArray);
+                alert(`Successfully loaded ${dataArray.length} records!`);
+                
+            } catch (error) {
+                alert('Invalid JSON format. Please check your data.');
+                console.error('JSON parse error:', error);
+            }
         }
 
-        // Debug functions
-        function updateDebugInfo(status, color) {
-            const element = document.getElementById('dataStatus');
-            element.textContent = status;
-            element.className = `text-${color}-600 font-semibold`;
+        function loadSampleJSON() {
+            const sampleJSON = JSON.stringify(allUserData, null, 2);
+            document.getElementById('manualDataInput').value = sampleJSON;
         }
 
-        function updateRecordCount(count) {
-            document.getElementById('recordCount').textContent = count;
+        function clearManualData() {
+            document.getElementById('manualDataInput').value = '';
         }
 
-        function updateFirstUID(firstRecord) {
-            document.getElementById('firstUID').textContent = firstRecord ? firstRecord.UID : '-';
+        // Test Google Script
+        async function testGoogleScript() {
+            try {
+                const response = await fetch(scriptUrl);
+                const data = await response.text();
+                alert('Google Script Response:\n\n' + data.substring(0, 500) + (data.length > 500 ? '...' : ''));
+            } catch (error) {
+                alert('Test failed: ' + error.message);
+            }
         }
 
-        function updateLastError(error) {
-            document.getElementById('lastError').textContent = error;
+        function showDataFixGuide() {
+            document.getElementById('fixGuideModal').classList.remove('hidden');
         }
 
-        function toggleDebug() {
-            const debugInfo = document.getElementById('debugInfo');
-            debugInfo.classList.toggle('hidden');
-        }
-
-        function viewRawData() {
-            document.getElementById('modalRawData').textContent = JSON.stringify(allUserData, null, 2);
-            document.getElementById('rawDataModal').classList.remove('hidden');
-        }
-
-        function closeRawData() {
-            document.getElementById('rawDataModal').classList.add('hidden');
-        }
-
-        function forceReload() {
-            loadAllData();
-        }
-
-        function showDataPreview(data) {
-            if (data.length === 0) return;
-            
-            const preview = document.getElementById('dataPreview');
-            const headers = document.getElementById('previewHeaders');
-            const body = document.getElementById('previewBody');
-            
-            const sample = data[0];
-            const sampleHeaders = Object.keys(sample).slice(0, 6); // Show first 6 columns
-            
-            headers.innerHTML = sampleHeaders.map(header => 
-                `<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">${header}</th>`
-            ).join('');
-            
-            body.innerHTML = data.slice(0, 5).map(row => `
-                <tr>
-                    ${sampleHeaders.map(header => 
-                        `<td class="px-4 py-2 text-sm text-gray-700 border-t">${row[header] || ''}</td>`
-                    ).join('')}
-                </tr>
-            `).join('');
-            
-            preview.classList.remove('hidden');
+        function hideFixGuide() {
+            document.getElementById('fixGuideModal').classList.add('hidden');
         }
 
         // Utility functions
